@@ -27,9 +27,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:support-v4:26.+'
     compile 'com.firebaseui:firebase-ui-auth:1.2.0'
+    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
     testCompile 'junit:junit:4.12'
 }
+
 
 
 

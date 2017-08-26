@@ -1,0 +1,70 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    tools:context="cl.anpetrus.prueba3.views.login.drawer.DrawerFragment">
+
+    <com.github.siyamed.shapeimageview.CircularImageView
+        android:id="@+id/avatarCi"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="54dp"
+
+        app:siBorderColor="@android:color/white"
+        app:siBorderWidth="6dp" />
+
+    <TextView
+        android:id="@+id/emailTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/avatarCi"
+        android:layout_marginTop="8dp"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:text="user@prueba.com"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        android:textSize="16sp" />
+
+    <View
+        android:id="@+id/viewLine"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/emailTv"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/white" />
+
+    <TextView
+        android:id="@+id/soonEventsTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/viewLine"
+        android:text="BUTTON UNO" />
+
+    <TextView
+        android:id="@+id/myEventsTv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/soonEventsTv"
+        android:text="BUTTON DOS" />
+
+    <TextView
+        android:id="@+id/logoutTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_weight="1"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:paddingRight="16dp"
+        android:text="Cerrar Sesión"
+        android:textColor="@android:color/white" />
+
+
+</RelativeLayout>
