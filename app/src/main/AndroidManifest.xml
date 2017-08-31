@@ -27,7 +27,7 @@
         <activity
             android:name=".views.events.NewEventActivity"
             android:label="@string/title_activity_new_event"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

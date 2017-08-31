@@ -11,7 +11,6 @@ import com.firebase.ui.auth.ResultCodes;
 import java.util.Arrays;
 
 import cl.anpetrus.prueba3.LoginCallBack;
-import cl.anpetrus.prueba3.LoginValidator;
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.views.events.NewEventActivity;
 
@@ -25,7 +24,10 @@ public class LoginActivity extends AppCompatActivity  implements LoginCallBack{
 
         setContentView(R.layout.activity_login);
 
-        new LoginValidator(this).init();
+        Intent intent = new Intent(this, NewEventActivity.class);
+        startActivity(intent);
+        finish();
+       // new LoginValidator(this).init();
 
     }
 

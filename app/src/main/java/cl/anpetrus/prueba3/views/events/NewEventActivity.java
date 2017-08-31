@@ -1,15 +1,22 @@
 package cl.anpetrus.prueba3.views.events;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +28,17 @@ import android.widget.LinearLayout;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.frosquivel.magicalcamera.MagicalCamera;
+import com.frosquivel.magicalcamera.MagicalPermissions;
+import com.squareup.picasso.Picasso;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 
 import cl.anpetrus.prueba3.R;
+import cl.anpetrus.prueba3.views.drawers.UploadPhoto;
 
 public class NewEventActivity extends AppCompatActivity {
 
@@ -36,6 +49,10 @@ public class NewEventActivity extends AppCompatActivity {
     boolean imageZoom;
     LinearLayout addEventLl;
     AppBarLayout appBar;
+
+    private MagicalPermissions magicalPermissions;
+    private MagicalCamera magicalCamera;
+    private int PHOTO_SIZE = 30;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,24 +145,40 @@ public class NewEventActivity extends AppCompatActivity {
         imageIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(imageZoom) {
-                    imageZoom=false;
+
+                if (imageZoom) {
+                    imageZoom = false;
                     ViewGroup.LayoutParams params = appBar.getLayoutParams();
                     params.height = LinearLayout.LayoutParams.MATCH_PARENT;
                     params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-                    //appBar.animate().scaleY(600).setDuration(1000).start();
                     appBar.setLayoutParams(params);
-                }else{
+
+
+                    String[] permissions = new String[]{
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    };
+                    magicalPermissions = new MagicalPermissions(NewEventActivity.this, permissions);
+                    magicalCamera = new MagicalCamera(NewEventActivity.this, PHOTO_SIZE, magicalPermissions);
+
+
+                } else {
+                    DisplayMetrics metrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                    int pixels = (int) (180 * metrics.density + 0.5f);
+                    imageIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     ViewGroup.LayoutParams params = appBar.getLayoutParams();
-                    params.height = R.dimen.app_bar_height;
+                    params.height = pixels;
                     params.width = LinearLayout.LayoutParams.MATCH_PARENT;
                     appBar.setLayoutParams(params);
-                    imageZoom=true;
+                    imageZoom = true;
                 }
             }
         });
 
     }
+
     private void hideKeyBoard(View view) {
         try {
             InputMethodManager imm = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -176,4 +209,58 @@ public class NewEventActivity extends AppCompatActivity {
         return false;
     }
 
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Map<String, Boolean> map = magicalPermissions.permissionResult(requestCode, permissions, grantResults);
+        for (String permission : map.keySet()) {
+            Log.d("PERMISSIONS", permission + " was: " + map.get(permission));
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //CALL THIS METHOD EVER
+        magicalCamera.resultPhoto(requestCode, resultCode, data);
+
+        if (RESULT_OK == resultCode) {
+            Toast.makeText(this, "OKA", Toast.LENGTH_SHORT).show();
+            Bitmap photo = magicalCamera.getPhoto();
+            String path = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Flash", MagicalCamera.JPEG, true);
+            Log.d("PATH", path);
+            path = "file://" + path;
+            setPhoto(path);
+            new UploadPhoto(this).toFirebase(path);
+        } else {
+            requestSelfie();
+        }
+    }
+
+
+    private void requestSelfie() {
+        Toast.makeText(this, "XAXA", Toast.LENGTH_SHORT).show();
+        new AlertDialog.Builder(this)
+                .setTitle("Selfie :)")
+                .setMessage("para completar el registro debes tener una selfie actualizada")
+                .setCancelable(false)
+                .setPositiveButton("SELFIE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        magicalCamera.takePhoto();
+                        dialogInterface.dismiss();
+                    }
+                })
+                .show();
+    }
+
+    private void setPhoto(String url) {
+
+        Picasso.with(this)
+                .load(url)
+                .fit()
+                .into(imageIv);
+
+    }
 }
