@@ -1,6 +1,5 @@
 package cl.anpetrus.prueba3.views.events;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -13,7 +12,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -50,6 +48,9 @@ public class NewEventActivity extends AppCompatActivity {
     LinearLayout addEventLl;
     AppBarLayout appBar;
 
+    FloatingActionButton galleryFab;
+    FloatingActionButton photoFab;
+
     private MagicalPermissions magicalPermissions;
     private MagicalCamera magicalCamera;
     private int PHOTO_SIZE = 30;
@@ -61,12 +62,43 @@ public class NewEventActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton actionFab = (FloatingActionButton) findViewById(R.id.actionsFab);
+
+        photoFab = (FloatingActionButton) findViewById(R.id.photoFab);
+
+        galleryFab = (FloatingActionButton) findViewById(R.id.galleryFab);
+
+        actionFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if(imageZoom) {
+                    imageZoom = false;
+                    ViewGroup.LayoutParams params = appBar.getLayoutParams();
+                    params.height = LinearLayout.LayoutParams.MATCH_PARENT;
+                    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                    appBar.setLayoutParams(params);
+
+
+                    photoFab.animate().rotation(360).setDuration(400).start();
+                    galleryFab.animate().rotation(360).setDuration(400).start();
+                    photoFab.animate().translationY(-250).setDuration(400).start();
+                    galleryFab.animate().translationY(-500).setDuration(400).start();
+                }else{
+                    photoFab.animate().rotation(0).setDuration(400).start();
+                    galleryFab.animate().rotation(0).setDuration(400).start();
+                    photoFab.animate().translationY(0).setDuration(400).start();
+                    galleryFab.animate().translationY(0).setDuration(400).start();
+
+                    DisplayMetrics metrics = new DisplayMetrics();
+                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
+                    int pixels = (int) (180 * metrics.density + 0.5f);
+                    imageIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                    ViewGroup.LayoutParams params = appBar.getLayoutParams();
+                    params.height = pixels;
+                    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+                    appBar.setLayoutParams(params);
+                    imageZoom = true;
+                }
             }
         });
 
@@ -153,17 +185,25 @@ public class NewEventActivity extends AppCompatActivity {
                     params.width = LinearLayout.LayoutParams.MATCH_PARENT;
                     appBar.setLayoutParams(params);
 
-
-                    String[] permissions = new String[]{
+                    photoFab.animate().rotation(360).setDuration(400).start();
+                    galleryFab.animate().rotation(360).setDuration(400).start();
+                    photoFab.animate().translationY(-250).setDuration(400).start();
+                    galleryFab.animate().translationY(-500).setDuration(400).start();
+                  /*  String[] permissions = new String[]{
                             Manifest.permission.CAMERA,
                             Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE
                     };
                     magicalPermissions = new MagicalPermissions(NewEventActivity.this, permissions);
                     magicalCamera = new MagicalCamera(NewEventActivity.this, PHOTO_SIZE, magicalPermissions);
-
+*/
 
                 } else {
+                    photoFab.animate().rotation(0).setDuration(400).start();
+                    galleryFab.animate().rotation(0).setDuration(400).start();
+                    photoFab.animate().translationY(0).setDuration(400).start();
+                    galleryFab.animate().translationY(0).setDuration(400).start();
+
                     DisplayMetrics metrics = new DisplayMetrics();
                     getWindowManager().getDefaultDisplay().getMetrics(metrics);
                     int pixels = (int) (180 * metrics.density + 0.5f);
@@ -232,7 +272,7 @@ public class NewEventActivity extends AppCompatActivity {
             Log.d("PATH", path);
             path = "file://" + path;
             setPhoto(path);
-            new UploadPhoto(this).toFirebase(path);
+            new UploadPhoto(this).toFirebase(path, "");
         } else {
             requestSelfie();
         }
@@ -264,3 +304,8 @@ public class NewEventActivity extends AppCompatActivity {
 
     }
 }
+
+
+
+
+
