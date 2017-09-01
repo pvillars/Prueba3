@@ -1,10 +1,9 @@
 package cl.anpetrus.prueba3.views.events;
 
-import android.app.AlertDialog;
+import android.Manifest;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,6 +36,7 @@ import java.util.Date;
 import java.util.Map;
 
 import cl.anpetrus.prueba3.R;
+import cl.anpetrus.prueba3.services.UserService;
 import cl.anpetrus.prueba3.views.drawers.UploadPhoto;
 
 public class NewEventActivity extends AppCompatActivity {
@@ -45,15 +46,17 @@ public class NewEventActivity extends AppCompatActivity {
     private ImageView imageIv;
     private Uri imageUri;
     boolean imageZoom;
-    LinearLayout addEventLl;
-    AppBarLayout appBar;
+    private LinearLayout addEventLl;
+    private AppBarLayout appBar;
 
-    FloatingActionButton galleryFab;
-    FloatingActionButton photoFab;
+    private String pathPhoto;
+
+    private FloatingActionButton galleryFab;
+    private FloatingActionButton photoFab;
 
     private MagicalPermissions magicalPermissions;
     private MagicalCamera magicalCamera;
-    private int PHOTO_SIZE = 30;
+    private int PHOTO_SIZE = 80;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +69,37 @@ public class NewEventActivity extends AppCompatActivity {
 
         photoFab = (FloatingActionButton) findViewById(R.id.photoFab);
 
+        photoFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String[] permissions = new String[]{
+                            Manifest.permission.CAMERA,
+                            Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    };
+                    magicalPermissions = new MagicalPermissions(NewEventActivity.this, permissions);
+                    magicalCamera = new MagicalCamera(NewEventActivity.this, PHOTO_SIZE, magicalPermissions);
+                requestPhoto();
+
+            }
+        });
+
         galleryFab = (FloatingActionButton) findViewById(R.id.galleryFab);
+
+        galleryFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String[] permissions = new String[]{
+                        Manifest.permission.CAMERA,
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                };
+                magicalPermissions = new MagicalPermissions(NewEventActivity.this, permissions);
+                magicalCamera = new MagicalCamera(NewEventActivity.this, PHOTO_SIZE, magicalPermissions);
+
+                magicalCamera.selectedPicture("my_header_name");
+            }
+        });
 
         actionFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,24 +110,18 @@ public class NewEventActivity extends AppCompatActivity {
                     params.height = LinearLayout.LayoutParams.MATCH_PARENT;
                     params.width = LinearLayout.LayoutParams.MATCH_PARENT;
                     appBar.setLayoutParams(params);
-
-
                     photoFab.animate().rotation(360).setDuration(400).start();
                     galleryFab.animate().rotation(360).setDuration(400).start();
-                    photoFab.animate().translationY(-250).setDuration(400).start();
-                    galleryFab.animate().translationY(-500).setDuration(400).start();
+                    photoFab.animate().translationY(-getPixels(80)).setDuration(400).start();
+                    galleryFab.animate().translationY(-getPixels(160)).setDuration(400).start();
                 }else{
                     photoFab.animate().rotation(0).setDuration(400).start();
                     galleryFab.animate().rotation(0).setDuration(400).start();
                     photoFab.animate().translationY(0).setDuration(400).start();
                     galleryFab.animate().translationY(0).setDuration(400).start();
 
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                    int pixels = (int) (180 * metrics.density + 0.5f);
-                    imageIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     ViewGroup.LayoutParams params = appBar.getLayoutParams();
-                    params.height = pixels;
+                    params.height = getPixels(180);
                     params.width = LinearLayout.LayoutParams.MATCH_PARENT;
                     appBar.setLayoutParams(params);
                     imageZoom = true;
@@ -187,16 +214,9 @@ public class NewEventActivity extends AppCompatActivity {
 
                     photoFab.animate().rotation(360).setDuration(400).start();
                     galleryFab.animate().rotation(360).setDuration(400).start();
-                    photoFab.animate().translationY(-250).setDuration(400).start();
-                    galleryFab.animate().translationY(-500).setDuration(400).start();
-                  /*  String[] permissions = new String[]{
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    };
-                    magicalPermissions = new MagicalPermissions(NewEventActivity.this, permissions);
-                    magicalCamera = new MagicalCamera(NewEventActivity.this, PHOTO_SIZE, magicalPermissions);
-*/
+                    photoFab.animate().translationY(-getPixels(250)).setDuration(400).start();
+                    galleryFab.animate().translationY(-getPixels(500)).setDuration(400).start();
+
 
                 } else {
                     photoFab.animate().rotation(0).setDuration(400).start();
@@ -204,12 +224,8 @@ public class NewEventActivity extends AppCompatActivity {
                     photoFab.animate().translationY(0).setDuration(400).start();
                     galleryFab.animate().translationY(0).setDuration(400).start();
 
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                    int pixels = (int) (180 * metrics.density + 0.5f);
-                    imageIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     ViewGroup.LayoutParams params = appBar.getLayoutParams();
-                    params.height = pixels;
+                    params.height = getPixels(180);
                     params.width = LinearLayout.LayoutParams.MATCH_PARENT;
                     appBar.setLayoutParams(params);
                     imageZoom = true;
@@ -217,6 +233,25 @@ public class NewEventActivity extends AppCompatActivity {
             }
         });
 
+        Button saveBtn = (Button) findViewById(R.id.saveEventBtn);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new UserService().saveCurrentUser();
+
+
+                new UploadPhoto(NewEventActivity.this).toFirebase(pathPhoto, "XXXXX");
+
+
+            }
+        });
+
+    }
+
+    private int getPixels(int dp){
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        return (int) (dp * metrics.density + 0.5f);
     }
 
     private void hideKeyBoard(View view) {
@@ -259,6 +294,7 @@ public class NewEventActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -268,31 +304,21 @@ public class NewEventActivity extends AppCompatActivity {
         if (RESULT_OK == resultCode) {
             Toast.makeText(this, "OKA", Toast.LENGTH_SHORT).show();
             Bitmap photo = magicalCamera.getPhoto();
-            String path = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Flash", MagicalCamera.JPEG, true);
-            Log.d("PATH", path);
-            path = "file://" + path;
-            setPhoto(path);
-            new UploadPhoto(this).toFirebase(path, "");
+            pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Flash", MagicalCamera.JPEG, true);
+            Log.d("PATH", pathPhoto);
+            pathPhoto = "file://" + pathPhoto;
+            setPhoto(pathPhoto);
+           // new UploadPhoto(this).toFirebase(path, "");
         } else {
-            requestSelfie();
+            requestPhoto();
         }
     }
 
 
-    private void requestSelfie() {
-        Toast.makeText(this, "XAXA", Toast.LENGTH_SHORT).show();
-        new AlertDialog.Builder(this)
-                .setTitle("Selfie :)")
-                .setMessage("para completar el registro debes tener una selfie actualizada")
-                .setCancelable(false)
-                .setPositiveButton("SELFIE", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        magicalCamera.takePhoto();
-                        dialogInterface.dismiss();
-                    }
-                })
-                .show();
+    private void requestPhoto() {
+
+         magicalCamera.takePhoto();
+
     }
 
     private void setPhoto(String url) {
@@ -301,6 +327,10 @@ public class NewEventActivity extends AppCompatActivity {
                 .load(url)
                 .fit()
                 .into(imageIv);
+        ViewGroup.LayoutParams params = imageIv.getLayoutParams();
+        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        imageIv.setLayoutParams(params);
 
     }
 }
