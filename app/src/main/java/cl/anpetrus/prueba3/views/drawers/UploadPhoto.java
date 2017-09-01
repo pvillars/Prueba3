@@ -8,9 +8,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.Date;
-
 import cl.anpetrus.prueba3.data.CurrentUser;
+import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.services.EventService;
 
@@ -25,13 +24,17 @@ public class UploadPhoto {
         this.context = context;
     }
     String url;
-    public String toFirebase(String path,String name){
+    public String toFirebase(String path, final Event newEvent){
 
         final CurrentUser currentUser = new CurrentUser();
-        String folder = currentUser.sanitizedEmail(currentUser.email())+"/";
-        String photoName = name + ".jpg";
+        final String userUidEmail = currentUser.sanitizedEmail(currentUser.email());
+        final String key = new Nodes().events().push().getKey();
+
+        String folder = userUidEmail +"/";
+        String photoName = key + ".jpg";
         String baseUrl = "gs://prueba3-1df0c.appspot.com/events/";
-        String refUrl = baseUrl + folder +photoName;
+        String refUrl = baseUrl + folder + photoName;
+
 
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
@@ -41,13 +44,9 @@ public class UploadPhoto {
                 @SuppressWarnings("VisibleForTests")
                 String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
                 url = fullUrl[0];
+                newEvent.setImage(url);
 
-                Event event = new Event();
-                event.setName("hola primero");
-                event.setDescription("jksdkflaksdjflas");
-                event.setImage(url);
-                event.setStart(new Date());
-                new EventService().saveEvent(event);
+                new EventService().saveEvent(newEvent);
             }
         });
         return url;

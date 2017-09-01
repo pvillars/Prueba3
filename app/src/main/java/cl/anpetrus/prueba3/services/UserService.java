@@ -20,9 +20,8 @@ public class UserService {
         user.setName(currentUser.getCurrentUser().getDisplayName());
         // user.setPhoto(url);
         user.setUid(currentUser.uid());
-
         String key = currentUser.sanitizedEmail(currentUser.email());
-        //new Nodes().users().child(key).setValue(user);
+
         new Nodes().user(key).setValue(user);
 
     }

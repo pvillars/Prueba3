@@ -22,7 +22,7 @@ public class Nodes {
         return users().child(key);
     }
 
-    public DatabaseReference event(String key){
-        return events().child(key);
-    }
+    public DatabaseReference event(String key){ return events().child(key); }
+
+  //  public Event getEventByKey(String key){    }
 }

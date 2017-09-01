@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="cl.anpetrus.prueba3.views.events.NewEventActivity"
-    tools:showIn="@layout/activity_new_event">
+    tools:context="cl.anpetrus.prueba3.views.events.ActionEventActivity"
+    tools:showIn="@layout/activity_action_event">
 
     <LinearLayout
         android:id="@+id/addEventLl"
@@ -15,8 +15,6 @@
         android:background="@color/colorPrimaryDark"
         android:gravity="center_vertical"
         android:orientation="vertical">
-
-
 
         <LinearLayout
             android:layout_width="match_parent"

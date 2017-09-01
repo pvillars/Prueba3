@@ -11,7 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import cl.anpetrus.prueba3.R;
-import cl.anpetrus.prueba3.views.events.NewEventActivity;
+import cl.anpetrus.prueba3.views.events.ActionEventActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,7 +26,8 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, NewEventActivity.class);
+                Intent intent = new Intent(MainActivity.this, ActionEventActivity.class);
+                intent.putExtra(ActionEventActivity.ID_ACTION,ActionEventActivity.ID_ACTION_UPDATE);
                 startActivity(intent);
             }
         });

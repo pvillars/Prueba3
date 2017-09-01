@@ -6,7 +6,6 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -28,75 +27,98 @@ import android.widget.Toast;
 
 import com.frosquivel.magicalcamera.MagicalCamera;
 import com.frosquivel.magicalcamera.MagicalPermissions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
 import cl.anpetrus.prueba3.R;
+import cl.anpetrus.prueba3.data.CurrentUser;
+import cl.anpetrus.prueba3.data.Nodes;
+import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.services.UserService;
 import cl.anpetrus.prueba3.views.drawers.UploadPhoto;
 
-public class NewEventActivity extends AppCompatActivity {
+public class ActionEventActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_CODE = 100;
+    public final static String ID_ACTION = "cl.anpetrus.prueba3.views.events.ActionEventActivity.ID_ACTION";
+    public final static String KEY_EVENT = "cl.anpetrus.prueba3.views.events.ActionEventActivity.KEY_EVENT";
+    public final static String ID_ACTION_NEW = "cl.anpetrus.prueba3.views.events.ActionEventActivity.ID_ACTION_NEW";
+    public final static String ID_ACTION_UPDATE = "cl.anpetrus.prueba3.views.events.ActionEventActivity.ID_ACTION_UPDATE";
+
     private EditText dateStartEt, timeStartEt, nameTv, descriptionTv;
     private ImageView imageIv;
-    private Uri imageUri;
     boolean imageZoom;
     private LinearLayout addEventLl;
     private AppBarLayout appBar;
-
     private String pathPhoto;
-
     private FloatingActionButton galleryFab;
     private FloatingActionButton photoFab;
-
     private MagicalPermissions magicalPermissions;
     private MagicalCamera magicalCamera;
     private int PHOTO_SIZE = 80;
+    private String imageUri;
+
+    private Event event;
+    private String actionExtra;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_event);
+        setContentView(R.layout.activity_action_event);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        event = new Event();
         FloatingActionButton actionFab = (FloatingActionButton) findViewById(R.id.actionsFab);
 
-        photoFab = (FloatingActionButton) findViewById(R.id.photoFab);
+        actionExtra = getIntent().getStringExtra(ID_ACTION);
 
+        if (actionExtra.equals(ID_ACTION_NEW)) {
+            getSupportActionBar().setTitle("Nuevo Evento");
+        }else if(actionExtra.equals(ID_ACTION_UPDATE)){
+            getSupportActionBar().setTitle("Actualizar Evento");
+            String keyEvent = "-Ksx_Ht5_q8x_Wg9MWeF";//getIntent().getStringExtra(KEY_EVENT);
+
+            new Nodes().event(keyEvent).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Event event = dataSnapshot.getValue(Event.class);
+                    Toast.makeText(ActionEventActivity.this,  event.getName(), Toast.LENGTH_LONG).show();
+                }
+
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+        }else{
+            getSupportActionBar().setTitle("Evento");
+        }
+
+        photoFab = (FloatingActionButton) findViewById(R.id.photoFab);
         photoFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] permissions = new String[]{
-                            Manifest.permission.CAMERA,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    };
-                    magicalPermissions = new MagicalPermissions(NewEventActivity.this, permissions);
-                    magicalCamera = new MagicalCamera(NewEventActivity.this, PHOTO_SIZE, magicalPermissions);
+                magicalPermissions = new MagicalPermissions(ActionEventActivity.this, permissions());
+                magicalCamera = new MagicalCamera(ActionEventActivity.this, PHOTO_SIZE, magicalPermissions);
                 requestPhoto();
-
             }
         });
 
         galleryFab = (FloatingActionButton) findViewById(R.id.galleryFab);
-
         galleryFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String[] permissions = new String[]{
-                        Manifest.permission.CAMERA,
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
-                };
-                magicalPermissions = new MagicalPermissions(NewEventActivity.this, permissions);
-                magicalCamera = new MagicalCamera(NewEventActivity.this, PHOTO_SIZE, magicalPermissions);
-
+                magicalPermissions = new MagicalPermissions(ActionEventActivity.this, permissions());
+                magicalCamera = new MagicalCamera(ActionEventActivity.this, PHOTO_SIZE, magicalPermissions);
                 magicalCamera.selectedPicture("my_header_name");
             }
         });
@@ -104,28 +126,7 @@ public class NewEventActivity extends AppCompatActivity {
         actionFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(imageZoom) {
-                    imageZoom = false;
-                    ViewGroup.LayoutParams params = appBar.getLayoutParams();
-                    params.height = LinearLayout.LayoutParams.MATCH_PARENT;
-                    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-                    appBar.setLayoutParams(params);
-                    photoFab.animate().rotation(360).setDuration(400).start();
-                    galleryFab.animate().rotation(360).setDuration(400).start();
-                    photoFab.animate().translationY(-getPixels(80)).setDuration(400).start();
-                    galleryFab.animate().translationY(-getPixels(160)).setDuration(400).start();
-                }else{
-                    photoFab.animate().rotation(0).setDuration(400).start();
-                    galleryFab.animate().rotation(0).setDuration(400).start();
-                    photoFab.animate().translationY(0).setDuration(400).start();
-                    galleryFab.animate().translationY(0).setDuration(400).start();
-
-                    ViewGroup.LayoutParams params = appBar.getLayoutParams();
-                    params.height = getPixels(180);
-                    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-                    appBar.setLayoutParams(params);
-                    imageZoom = true;
-                }
+                imageZoom(view);
             }
         });
 
@@ -150,7 +151,6 @@ public class NewEventActivity extends AppCompatActivity {
         dateStartEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 hideKeyBoard(view);
 
                 int year, month, day;
@@ -160,14 +160,13 @@ public class NewEventActivity extends AppCompatActivity {
                 month = c.get(Calendar.MONTH);
                 day = c.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog datePickerDialog = new DatePickerDialog(NewEventActivity.this,
+                DatePickerDialog datePickerDialog = new DatePickerDialog(ActionEventActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
 
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
                                 dateStartEt.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
-
                             }
                         }, year, month, day);
                 datePickerDialog.show();
@@ -177,14 +176,13 @@ public class NewEventActivity extends AppCompatActivity {
         timeStartEt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 hideKeyBoard(view);
 
                 int hour, minute;
                 final Calendar c = Calendar.getInstance();
                 hour = c.get(Calendar.HOUR_OF_DAY);
                 minute = c.get(Calendar.MINUTE);
-                TimePickerDialog timePickerDialog = new TimePickerDialog(NewEventActivity.this,
+                TimePickerDialog timePickerDialog = new TimePickerDialog(ActionEventActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay,
@@ -198,38 +196,19 @@ public class NewEventActivity extends AppCompatActivity {
         });
 
         addEventLl = (LinearLayout) findViewById(R.id.addEventLl);
+        addEventLl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                hideKeyBoard(view);
+            }
+        });
 
         imageIv = (ImageView) findViewById(R.id.imageIv);
         imageZoom = true;
         imageIv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                if (imageZoom) {
-                    imageZoom = false;
-                    ViewGroup.LayoutParams params = appBar.getLayoutParams();
-                    params.height = LinearLayout.LayoutParams.MATCH_PARENT;
-                    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-                    appBar.setLayoutParams(params);
-
-                    photoFab.animate().rotation(360).setDuration(400).start();
-                    galleryFab.animate().rotation(360).setDuration(400).start();
-                    photoFab.animate().translationY(-getPixels(250)).setDuration(400).start();
-                    galleryFab.animate().translationY(-getPixels(500)).setDuration(400).start();
-
-
-                } else {
-                    photoFab.animate().rotation(0).setDuration(400).start();
-                    galleryFab.animate().rotation(0).setDuration(400).start();
-                    photoFab.animate().translationY(0).setDuration(400).start();
-                    galleryFab.animate().translationY(0).setDuration(400).start();
-
-                    ViewGroup.LayoutParams params = appBar.getLayoutParams();
-                    params.height = getPixels(180);
-                    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-                    appBar.setLayoutParams(params);
-                    imageZoom = true;
-                }
+                imageZoom(view);
             }
         });
 
@@ -237,18 +216,33 @@ public class NewEventActivity extends AppCompatActivity {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new UserService().saveCurrentUser();
+                CurrentUser currentUser = new CurrentUser();
+                String userUidEmail = currentUser.sanitizedEmail(currentUser.email());
 
+                String dateString = dateStartEt.getText().toString() + " " + timeStartEt.getText().toString();
+                Date startDateTime;
+                try {
+                    startDateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(dateString);
+                    event.setName(nameTv.getText().toString());
+                    event.setDescription(descriptionTv.getText().toString());
+                    event.setStart(startDateTime);
+                    event.setUidUser(userUidEmail);
 
-                new UploadPhoto(NewEventActivity.this).toFirebase(pathPhoto, "XXXXX");
+                    if (isValidData(event)) {
+                        new UserService().saveCurrentUser();
+                        new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, event);
+                        Toast.makeText(ActionEventActivity.this, "Evento agregado exitozamente", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ParseException e) {
+                    Log.e("PARSEEXCPTION", "Error en parsear FechaStart" + e);
+                }
 
 
             }
         });
-
     }
 
-    private int getPixels(int dp){
+    private int getPixels(int dp) {
         DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         return (int) (dp * metrics.density + 0.5f);
@@ -263,10 +257,10 @@ public class NewEventActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isValidData(String name, String description, Date date) {
-        if (name.trim().length() > 0) {
-            if (description.trim().length() > 0) {
-                if (date.after(new Date())) {
+    private boolean isValidData(Event event) {
+        if (event.getName().trim().length() > 0) {
+            if (event.getDescription().trim().length() > 0) {
+                if (event.getStart().after(new Date())) {
                     if (imageUri != null) {
                         return true;
                     } else {
@@ -308,21 +302,19 @@ public class NewEventActivity extends AppCompatActivity {
             Log.d("PATH", pathPhoto);
             pathPhoto = "file://" + pathPhoto;
             setPhoto(pathPhoto);
-           // new UploadPhoto(this).toFirebase(path, "");
+            // new UploadPhoto(this).toFirebase(path, "");
         } else {
-            requestPhoto();
+            // requestPhoto();
+            // error con camara
         }
     }
 
 
     private void requestPhoto() {
-
-         magicalCamera.takePhoto();
-
+        magicalCamera.takePhoto();
     }
 
     private void setPhoto(String url) {
-
         Picasso.with(this)
                 .load(url)
                 .fit()
@@ -331,7 +323,50 @@ public class NewEventActivity extends AppCompatActivity {
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         imageIv.setLayoutParams(params);
+        imageUri = url;
+    }
 
+    private void imageZoom(View view) {
+        hideKeyBoard(view);
+        if (imageZoom) {
+            imageZoom = false;
+            imageZoomIn();
+        } else {
+            imageZoomOut();
+            imageZoom = true;
+        }
+    }
+
+    private void imageZoomIn() {
+        ViewGroup.LayoutParams params = appBar.getLayoutParams();
+        params.height = LinearLayout.LayoutParams.MATCH_PARENT;
+        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        appBar.setLayoutParams(params);
+
+        photoFab.animate().rotation(360).setDuration(400).start();
+        galleryFab.animate().rotation(360).setDuration(400).start();
+        photoFab.animate().translationY(-getPixels(80)).setDuration(400).start();
+        galleryFab.animate().translationY(-getPixels(160)).setDuration(400).start();
+    }
+
+    private void imageZoomOut() {
+        photoFab.animate().rotation(0).setDuration(400).start();
+        galleryFab.animate().rotation(0).setDuration(400).start();
+        photoFab.animate().translationY(0).setDuration(400).start();
+        galleryFab.animate().translationY(0).setDuration(400).start();
+
+        ViewGroup.LayoutParams params = appBar.getLayoutParams();
+        params.height = getPixels(180);
+        params.width = LinearLayout.LayoutParams.MATCH_PARENT;
+        appBar.setLayoutParams(params);
+    }
+
+    private String[] permissions() {
+        return new String[]{
+                Manifest.permission.CAMERA,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
     }
 }
 

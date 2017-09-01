@@ -26,7 +26,6 @@
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:paddingTop="8dp"
-        android:text="user@prueba.com"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
@@ -43,15 +42,17 @@
         android:id="@+id/soonEventsTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         android:layout_below="@+id/viewLine"
-        android:text="BUTTON UNO" />
+        android:text="Proximos Eventos" />
 
     <TextView
         android:id="@+id/myEventsTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/soonEventsTv"
-        android:text="BUTTON DOS" />
+        android:clickable="true"
+        android:text="Mis Eventos" />
 
     <TextView
         android:id="@+id/logoutTv"
