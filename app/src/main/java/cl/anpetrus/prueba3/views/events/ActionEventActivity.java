@@ -22,6 +22,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -68,6 +69,11 @@ public class ActionEventActivity extends AppCompatActivity {
     private Event event;
     private String actionExtra;
 
+    String dateString, timeString;
+    Date date = new Date();
+    ProgressBar progressBar;
+    boolean photoUdate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,31 +83,98 @@ public class ActionEventActivity extends AppCompatActivity {
         event = new Event();
         FloatingActionButton actionFab = (FloatingActionButton) findViewById(R.id.actionsFab);
 
+        progressBar = (ProgressBar) findViewById(R.id.loadingBar);
         actionExtra = getIntent().getStringExtra(ID_ACTION);
+
+        nameTv = (EditText) findViewById(R.id.nameNewEt);
+        descriptionTv = (EditText) findViewById(R.id.descriptionNewEt);
+        imageIv = (ImageView) findViewById(R.id.imageIv);
+
+
+        dateStartEt = (EditText) findViewById(R.id.dateStartEt);
+        timeStartEt = (EditText) findViewById(R.id.timeStartEt);
+
+        Button saveBtn = (Button) findViewById(R.id.saveEventBtn);
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CurrentUser currentUser = new CurrentUser();
+                String userUidEmail = currentUser.sanitizedEmail(currentUser.email());
+
+                String dateString = dateStartEt.getText().toString() + " " + timeStartEt.getText().toString();
+                Date startDateTime;
+                try {
+                    startDateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(dateString);
+                    event.setName(nameTv.getText().toString());
+                    event.setDescription(descriptionTv.getText().toString());
+                    event.setStart(startDateTime);
+                    event.setUidUser(userUidEmail);
+                    event.setImage(imageUri);
+
+                    if (isValidData(event)) {
+                        if (actionExtra.equals(ID_ACTION_UPDATE)) {
+                            event.setKey("-Ksx_Ht5_q8x_Wg9MWeF");
+
+                            pathPhoto = imageUri;
+                            new UserService().saveCurrentUser();
+                            new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(pathPhoto, event, photoUdate);
+                            Toast.makeText(ActionEventActivity.this, "Evento actualizado exitozamente", Toast.LENGTH_SHORT).show();
+
+
+                        } else {
+                            new UserService().saveCurrentUser();
+                            new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, event);
+                            Toast.makeText(ActionEventActivity.this, "Evento agregado exitozamente", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } catch (ParseException e) {
+                    Log.e("PARSEEXCPTION", "Error en parsear FechaStart" + e);
+                }
+
+
+            }
+        });
+
 
         if (actionExtra.equals(ID_ACTION_NEW)) {
             getSupportActionBar().setTitle("Nuevo Evento");
-        }else if(actionExtra.equals(ID_ACTION_UPDATE)){
+            saveBtn.setText("AGREGAR");
+            dateString = new SimpleDateFormat("dd-MM-yyyy").format(date);
+            timeString = new SimpleDateFormat("HH:mm:ss").format(date);
+            dateStartEt.setText(dateString);
+            timeStartEt.setText(timeString);
+        } else if (actionExtra.equals(ID_ACTION_UPDATE)) {
+
+            progressBar.setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("Actualizar Evento");
             String keyEvent = "-Ksx_Ht5_q8x_Wg9MWeF";//getIntent().getStringExtra(KEY_EVENT);
-
+            saveBtn.setText("ACTUALIZAR");
             new Nodes().event(keyEvent).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Event event = dataSnapshot.getValue(Event.class);
-                    Toast.makeText(ActionEventActivity.this,  event.getName(), Toast.LENGTH_LONG).show();
+                    nameTv.setText(event.getName());
+                    descriptionTv.setText(event.getDescription());
+                    date = event.getStart();
+                    dateString = new SimpleDateFormat("dd-MM-yyyy").format(date);
+                    timeString = new SimpleDateFormat("HH:mm:ss").format(date);
+                    dateStartEt.setText(dateString);
+                    timeStartEt.setText(timeString);
+                    setPhoto(event.getImage());
+                    Toast.makeText(ActionEventActivity.this, event.getImage(), Toast.LENGTH_LONG).show();
+                    Log.d("IOP", event.getImage());
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
-
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             });
-
-        }else{
+        } else {
             getSupportActionBar().setTitle("Evento");
         }
+
 
         photoFab = (FloatingActionButton) findViewById(R.id.photoFab);
         photoFab.setOnClickListener(new View.OnClickListener() {
@@ -132,21 +205,12 @@ public class ActionEventActivity extends AppCompatActivity {
 
         appBar = (AppBarLayout) findViewById(R.id.app_bar);
 
-        nameTv = (EditText) findViewById(R.id.nameNewEt);
-        descriptionTv = (EditText) findViewById(R.id.descriptionNewEt);
-        imageIv = (ImageView) findViewById(R.id.imageIv);
 
         nameTv.setHint("NOMBRE");
         descriptionTv.setHint("DESCRIPCIÓN");
 
-        dateStartEt = (EditText) findViewById(R.id.dateStartEt);
-        timeStartEt = (EditText) findViewById(R.id.timeStartEt);
-        Date dateNow = new Date();
-        String dateString = new SimpleDateFormat("dd-MM-yyyy").format(dateNow);
-        String timeString = new SimpleDateFormat("HH:mm:ss").format(dateNow);
 
-        dateStartEt.setText(dateString);
-        timeStartEt.setText(timeString);
+
 
         dateStartEt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,34 +276,7 @@ public class ActionEventActivity extends AppCompatActivity {
             }
         });
 
-        Button saveBtn = (Button) findViewById(R.id.saveEventBtn);
-        saveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                CurrentUser currentUser = new CurrentUser();
-                String userUidEmail = currentUser.sanitizedEmail(currentUser.email());
 
-                String dateString = dateStartEt.getText().toString() + " " + timeStartEt.getText().toString();
-                Date startDateTime;
-                try {
-                    startDateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(dateString);
-                    event.setName(nameTv.getText().toString());
-                    event.setDescription(descriptionTv.getText().toString());
-                    event.setStart(startDateTime);
-                    event.setUidUser(userUidEmail);
-
-                    if (isValidData(event)) {
-                        new UserService().saveCurrentUser();
-                        new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, event);
-                        Toast.makeText(ActionEventActivity.this, "Evento agregado exitozamente", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (ParseException e) {
-                    Log.e("PARSEEXCPTION", "Error en parsear FechaStart" + e);
-                }
-
-
-            }
-        });
     }
 
     private int getPixels(int dp) {
@@ -302,6 +339,7 @@ public class ActionEventActivity extends AppCompatActivity {
             Log.d("PATH", pathPhoto);
             pathPhoto = "file://" + pathPhoto;
             setPhoto(pathPhoto);
+            photoUdate = true;
             // new UploadPhoto(this).toFirebase(path, "");
         } else {
             // requestPhoto();
@@ -317,13 +355,15 @@ public class ActionEventActivity extends AppCompatActivity {
     private void setPhoto(String url) {
         Picasso.with(this)
                 .load(url)
-                .fit()
+                .error(R.mipmap.ic_insert_photo_white_36dp)
+                .placeholder(R.mipmap.ic_launcher_round)
                 .into(imageIv);
         ViewGroup.LayoutParams params = imageIv.getLayoutParams();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         imageIv.setLayoutParams(params);
         imageUri = url;
+        photoUdate = false;
     }
 
     private void imageZoom(View view) {

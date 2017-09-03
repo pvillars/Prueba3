@@ -36,7 +36,6 @@ public class UploadPhoto {
         String refUrl = baseUrl + folder + photoName;
 
 
-
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
         storageReference.putFile(Uri.parse(path)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -51,4 +50,34 @@ public class UploadPhoto {
         });
         return url;
     }
+
+    public String toFirebaseUpdate(String path, final Event event, boolean upDatePhoto){
+
+        final CurrentUser currentUser = new CurrentUser();
+        final String userUidEmail = currentUser.sanitizedEmail(currentUser.email());
+
+        if(upDatePhoto) {
+            String folder = userUidEmail + "/";
+            String photoName = event.getKey() + ".jpg";
+            String baseUrl = "gs://prueba3-1df0c.appspot.com/events/";
+            String refUrl = baseUrl + folder + photoName;
+
+
+            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
+            storageReference.putFile(Uri.parse(path)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    @SuppressWarnings("VisibleForTests")
+                    String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
+                    url = fullUrl[0];
+
+                    new EventService().saveEvent(event);
+                }
+            });
+        }else{
+            new EventService().saveEvent(event);
+        }
+        return url;
+    }
+
 }
