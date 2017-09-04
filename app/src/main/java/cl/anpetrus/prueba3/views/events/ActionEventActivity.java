@@ -94,8 +94,8 @@ public class ActionEventActivity extends AppCompatActivity {
         dateStartEt = (EditText) findViewById(R.id.dateStartEt);
         timeStartEt = (EditText) findViewById(R.id.timeStartEt);
 
-        Button saveBtn = (Button) findViewById(R.id.saveEventBtn);
-        saveBtn.setOnClickListener(new View.OnClickListener() {
+        Button saveUpdateBtn = (Button) findViewById(R.id.saveUpdateEventBtn);
+        saveUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CurrentUser currentUser = new CurrentUser();
@@ -113,7 +113,7 @@ public class ActionEventActivity extends AppCompatActivity {
 
                     if (isValidData(event)) {
                         if (actionExtra.equals(ID_ACTION_UPDATE)) {
-                            event.setKey("-Ksx_Ht5_q8x_Wg9MWeF");
+                            event.setKey("-KsxpyqcsHAlM2CV6hdf");
 
                             pathPhoto = imageUri;
                             new UserService().saveCurrentUser();
@@ -138,7 +138,7 @@ public class ActionEventActivity extends AppCompatActivity {
 
         if (actionExtra.equals(ID_ACTION_NEW)) {
             getSupportActionBar().setTitle("Nuevo Evento");
-            saveBtn.setText("AGREGAR");
+            saveUpdateBtn.setText("AGREGAR");
             dateString = new SimpleDateFormat("dd-MM-yyyy").format(date);
             timeString = new SimpleDateFormat("HH:mm:ss").format(date);
             dateStartEt.setText(dateString);
@@ -147,8 +147,8 @@ public class ActionEventActivity extends AppCompatActivity {
 
             progressBar.setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("Actualizar Evento");
-            String keyEvent = "-Ksx_Ht5_q8x_Wg9MWeF";//getIntent().getStringExtra(KEY_EVENT);
-            saveBtn.setText("ACTUALIZAR");
+            String keyEvent = "-KsxpyqcsHAlM2CV6hdf";//getIntent().getStringExtra(KEY_EVENT);
+            saveUpdateBtn.setText("ACTUALIZAR");
             new Nodes().event(keyEvent).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -358,6 +358,7 @@ public class ActionEventActivity extends AppCompatActivity {
                 .error(R.mipmap.ic_insert_photo_white_36dp)
                 .placeholder(R.mipmap.ic_launcher_round)
                 .into(imageIv);
+        Log.d("IMAGE",url);
         ViewGroup.LayoutParams params = imageIv.getLayoutParams();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
