@@ -18,11 +18,23 @@ public class Nodes {
         return root.child("events");
     }
 
+    public DatabaseReference eventsList(){
+        return root.child("events_list");
+    }
+
+    public DatabaseReference myEventsList(){
+        return root.child("my_events_list");
+    }
+
     public DatabaseReference user(String key){
         return users().child(key);
     }
 
     public DatabaseReference event(String key){ return events().child(key); }
+
+    public DatabaseReference eventList(String key){ return eventsList().child(key); }
+
+    public DatabaseReference myEventList(String key){ return myEventsList().child(key); }
 
   //  public Event getEventByKey(String key){    }
 }

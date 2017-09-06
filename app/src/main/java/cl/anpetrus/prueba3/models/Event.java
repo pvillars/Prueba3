@@ -8,7 +8,12 @@ import java.util.Date;
 
 public class Event {
 
-    String key, name, description, image, uidUser;
+    String key;
+    String name;
+    String description;
+    String image;
+    String imageThumbnail;
+    String uidUser;
     Date start;
 
 
@@ -61,5 +66,13 @@ public class Event {
 
     public void setStart(Date start) {
         this.start = start;
+    }
+
+    public String getImageThumbnail() {
+        return imageThumbnail;
+    }
+
+    public void setImageThumbnail(String imageThumbnail) {
+        this.imageThumbnail = imageThumbnail;
     }
 }

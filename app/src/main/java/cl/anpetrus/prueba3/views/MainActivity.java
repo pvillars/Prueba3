@@ -22,12 +22,13 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.actionsFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ActionEventActivity.class);
-                intent.putExtra(ActionEventActivity.ID_ACTION,ActionEventActivity.ID_ACTION_UPDATE);
+                intent.putExtra(ActionEventActivity.ID_ACTION,ActionEventActivity.ID_ACTION_NEW);
                 startActivity(intent);
             }
         });
@@ -48,10 +49,5 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-
-
-
-
-
 
 }

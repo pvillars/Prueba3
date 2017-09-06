@@ -92,7 +92,6 @@ public class ActionEventActivity extends AppCompatActivity {
                     Toast.makeText(ActionEventActivity.this,  event.getName(), Toast.LENGTH_LONG).show();
                 }
 
-
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
 

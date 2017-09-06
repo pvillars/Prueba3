@@ -29,6 +29,10 @@ public class EventService {
         String key = reference.push().getKey();
         event.setKey(key);
         new Nodes().event(key).setValue(event);
+        event.setDescription(null);
+        new Nodes().eventList(key).setValue(event);
+
+        new Nodes().myEventList(event.getUidUser()).setValue(event);
 
     }
 

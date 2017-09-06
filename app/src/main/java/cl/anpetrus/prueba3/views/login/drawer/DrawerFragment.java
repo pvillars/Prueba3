@@ -9,14 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import cl.anpetrus.prueba3.EventListValidator;
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.data.CurrentUser;
+import cl.anpetrus.prueba3.views.ListEventsFragment;
 import cl.anpetrus.prueba3.views.login.LoginActivity;
 
 public class DrawerFragment extends Fragment {
@@ -57,11 +58,14 @@ public class DrawerFragment extends Fragment {
         TextView emailTv = view.findViewById(R.id.emailTv);
         emailTv.setText(new CurrentUser().email());
 
+
+        final EventListValidator eventListValidator = new EventListValidator(ListEventsFragment.getThis());
         TextView soonEventsTv = view.findViewById(R.id.soonEventsTv);
         soonEventsTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Proximos Eventos", Toast.LENGTH_SHORT).show();
+
+                eventListValidator.showEventList(EventListValidator.TYPE_EVENTS.SOON_EVENTS);
             }
         });
 
@@ -69,7 +73,7 @@ public class DrawerFragment extends Fragment {
         myEventsTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Mis Eventos", Toast.LENGTH_SHORT).show();
+                eventListValidator.showEventList(EventListValidator.TYPE_EVENTS.MY_EVENTS);
             }
         });
 
