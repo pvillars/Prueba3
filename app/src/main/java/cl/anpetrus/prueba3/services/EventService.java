@@ -36,6 +36,17 @@ public class EventService {
 
     }
 
+    public void updateEvent(Event event) {
+        String key = event.getKey();
+
+        new Nodes().event(key).setValue(event);
+
+        event.setDescription(null);
+        new Nodes().eventList(key).setValue(event);
+        new Nodes().myEventList(event.getUidUser(),key).setValue(event);
+
+    }
+
     public Event getEvent(String key){
         final Event[] event = {new Event()};
         new Nodes().event(key).addListenerForSingleValueEvent(new ValueEventListener() {

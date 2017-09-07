@@ -15,10 +15,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import cl.anpetrus.prueba3.EventListValidator;
+import cl.anpetrus.prueba3.MenuValidator;
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.views.ListEventsFragment;
+import cl.anpetrus.prueba3.views.MainActivity;
 import cl.anpetrus.prueba3.views.login.LoginActivity;
+
+import static cl.anpetrus.prueba3.R.layout.fragment_drawer_menu;
 
 public class DrawerFragment extends Fragment {
 
@@ -31,13 +35,12 @@ public class DrawerFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_drawer_menu, container, false);
+        return inflater.inflate(fragment_drawer_menu, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         TextView logoutTv = view.findViewById(R.id.logoutTv);
         logoutTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,13 +61,12 @@ public class DrawerFragment extends Fragment {
         TextView emailTv = view.findViewById(R.id.emailTv);
         emailTv.setText(new CurrentUser().email());
 
-
         final EventListValidator eventListValidator = new EventListValidator(ListEventsFragment.getThis());
         TextView soonEventsTv = view.findViewById(R.id.soonEventsTv);
         soonEventsTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                closeMenu();
                 eventListValidator.showEventList(EventListValidator.TYPE_EVENTS.SOON_EVENTS);
             }
         });
@@ -73,10 +75,14 @@ public class DrawerFragment extends Fragment {
         myEventsTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                closeMenu();
                 eventListValidator.showEventList(EventListValidator.TYPE_EVENTS.MY_EVENTS);
             }
         });
+    }
 
-
+    private void closeMenu() {
+        MenuValidator menuValidator = new MenuValidator(MainActivity.getThis());
+        menuValidator.closeMenu();
     }
 }

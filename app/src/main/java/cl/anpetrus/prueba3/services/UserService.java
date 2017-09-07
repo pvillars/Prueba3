@@ -1,6 +1,7 @@
 package cl.anpetrus.prueba3.services;
 
 import cl.anpetrus.prueba3.data.CurrentUser;
+import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.User;
 
@@ -20,7 +21,7 @@ public class UserService {
         user.setName(currentUser.getCurrentUser().getDisplayName());
         // user.setPhoto(url);
         user.setUid(currentUser.uid());
-        String key = currentUser.sanitizedEmail(currentUser.email());
+        String key = EmailProcessor.sanitizedEmail(currentUser.email());
 
         new Nodes().user(key).setValue(user);
 

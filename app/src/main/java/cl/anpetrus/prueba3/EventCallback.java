@@ -8,5 +8,6 @@ import cl.anpetrus.prueba3.models.Event;
 
 public interface EventCallback {
     void loadEvent(Event event);
+    void showEdit();
 
 }

@@ -15,6 +15,7 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import cl.anpetrus.prueba3.data.CurrentUser;
+import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.services.EventService;
@@ -36,7 +37,7 @@ public class UploadPhoto {
     public String toFirebase(final String path, final Event newEvent) {
 
         final CurrentUser currentUser = new CurrentUser();
-        final String userUidEmail = currentUser.sanitizedEmail(currentUser.email());
+        final String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
         final String key = new Nodes().events().push().getKey();
 
         String folder = userUidEmail + "/";
@@ -62,12 +63,11 @@ public class UploadPhoto {
         });
         return url;
     }
-    public String toFirebaseUpdate(String path, final Event event, boolean upDatePhoto){
+    public String toFirebaseUpdate(String path, final Event event){
 
         final CurrentUser currentUser = new CurrentUser();
-        final String userUidEmail = currentUser.sanitizedEmail(currentUser.email());
+        final String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
 
-        if(upDatePhoto) {
             String folder = userUidEmail + "/";
             String photoName = event.getKey() + ".jpg";
             String baseUrl = "gs://prueba3-1df0c.appspot.com/events/";
@@ -82,12 +82,9 @@ public class UploadPhoto {
                     String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
                     url = fullUrl[0];
 
-                    new EventService().saveEvent(event);
+                    new EventService().updateEvent(event);
                 }
             });
-        }else{
-            new EventService().saveEvent(event);
-        }
         return url;
     }
 

@@ -14,6 +14,7 @@ import android.widget.Toast;
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.adapters.EventsAdapter;
 import cl.anpetrus.prueba3.data.CurrentUser;
+import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.listeners.EventListener;
 import cl.anpetrus.prueba3.views.events.EventActivity;
@@ -81,7 +82,7 @@ public class ListEventsFragment extends Fragment implements EventListener {
     @Override
     public void showMyEvents() {
         Toast.makeText(getContext(), "My EVENT "+new CurrentUser().email(), Toast.LENGTH_SHORT).show();
-        adapter = new EventsAdapter(this,getContext(),new Nodes().myEventList(new CurrentUser().sanitizedEmail(new CurrentUser().email())));
+        adapter = new EventsAdapter(this,getContext(),new Nodes().myEventList(EmailProcessor.sanitizedEmail(new CurrentUser().email())));
         recyclerView.setAdapter(adapter);
     }
 }

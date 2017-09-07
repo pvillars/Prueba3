@@ -41,6 +41,7 @@ import java.util.Map;
 
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.data.CurrentUser;
+import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.services.UserService;
@@ -66,13 +67,12 @@ public class ActionEventActivity extends AppCompatActivity {
     private int PHOTO_SIZE = 80;
     private String imageUri;
 
-    private Event event;
+    private Event eventMaster;
     private String actionExtra;
 
     String dateString, timeString;
     Date date = new Date();
     ProgressBar progressBar;
-    boolean photoUdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,14 +80,14 @@ public class ActionEventActivity extends AppCompatActivity {
         setContentView(R.layout.activity_action_event);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        event = new Event();
+        eventMaster = new Event();
         FloatingActionButton actionFab = (FloatingActionButton) findViewById(R.id.actionsFab);
 
         progressBar = (ProgressBar) findViewById(R.id.loadingBar);
 
         progressBar.setVisibility(View.INVISIBLE);
 
-        actionExtra = getIntent().getStringExtra(ID_ACTION);
+
 
         nameTv = (EditText) findViewById(R.id.nameNewEt);
         descriptionTv = (EditText) findViewById(R.id.descriptionNewEt);
@@ -97,37 +97,40 @@ public class ActionEventActivity extends AppCompatActivity {
         dateStartEt = (EditText) findViewById(R.id.dateStartEt);
         timeStartEt = (EditText) findViewById(R.id.timeStartEt);
 
+        actionExtra = getIntent().getStringExtra(ID_ACTION);
+
         Button saveUpdateBtn = (Button) findViewById(R.id.saveUpdateEventBtn);
         saveUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 CurrentUser currentUser = new CurrentUser();
-                String userUidEmail = currentUser.sanitizedEmail(currentUser.email());
+                String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
 
                 String dateString = dateStartEt.getText().toString() + " " + timeStartEt.getText().toString();
                 Date startDateTime;
                 try {
                     startDateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(dateString);
-                    event.setName(nameTv.getText().toString());
-                    event.setDescription(descriptionTv.getText().toString());
-                    event.setStart(startDateTime);
-                    event.setUidUser(userUidEmail);
-                    event.setImage(imageUri);
+                    eventMaster.setName(nameTv.getText().toString());
+                    eventMaster.setDescription(descriptionTv.getText().toString());
+                    eventMaster.setStart(startDateTime);
+                    eventMaster.setUidUser(userUidEmail);
+                    eventMaster.setImage(imageUri);
 
-                    if (isValidData(event)) {
+                    if (isValidData(eventMaster)) {
                         if (actionExtra.equals(ID_ACTION_UPDATE)) {
-                            event.setKey("-KsxpyqcsHAlM2CV6hdf");
+
 
                             pathPhoto = imageUri;
                             new UserService().saveCurrentUser();
-                            new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(pathPhoto, event, photoUdate);
+                            new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(pathPhoto, eventMaster);
                             Toast.makeText(ActionEventActivity.this, "Evento actualizado exitozamente", Toast.LENGTH_SHORT).show();
-
+                            finish();
 
                         } else {
                             new UserService().saveCurrentUser();
-                            new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, event);
+                            new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, eventMaster);
                             Toast.makeText(ActionEventActivity.this, "Evento agregado exitozamente", Toast.LENGTH_SHORT).show();
+                            finish();
                         }
                     }
                 } catch (ParseException e) {
@@ -139,6 +142,8 @@ public class ActionEventActivity extends AppCompatActivity {
         });
 
 
+
+
         if (actionExtra.equals(ID_ACTION_NEW)) {
             getSupportActionBar().setTitle("Nuevo Evento");
             saveUpdateBtn.setText("AGREGAR");
@@ -147,15 +152,15 @@ public class ActionEventActivity extends AppCompatActivity {
             dateStartEt.setText(dateString);
             timeStartEt.setText(timeString);
         } else if (actionExtra.equals(ID_ACTION_UPDATE)) {
-
-            progressBar.setVisibility(View.VISIBLE);
+           // progressBar.setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("Actualizar Evento");
-            String keyEvent = "-KsxpyqcsHAlM2CV6hdf";//getIntent().getStringExtra(KEY_EVENT);
+            String keyEvent = getIntent().getStringExtra(KEY_EVENT);
             saveUpdateBtn.setText("ACTUALIZAR");
             new Nodes().event(keyEvent).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     Event event = dataSnapshot.getValue(Event.class);
+                    eventMaster = event;
                     nameTv.setText(event.getName());
                     descriptionTv.setText(event.getDescription());
                     date = event.getStart();
@@ -342,7 +347,6 @@ public class ActionEventActivity extends AppCompatActivity {
             Log.d("PATH", pathPhoto);
             pathPhoto = "file://" + pathPhoto;
             setPhoto(pathPhoto);
-            photoUdate = true;
             // new UploadPhoto(this).toFirebase(path, "");
         } else {
             // requestPhoto();
@@ -367,7 +371,6 @@ public class ActionEventActivity extends AppCompatActivity {
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         imageIv.setLayoutParams(params);
         imageUri = url;
-        photoUdate = false;
     }
 
     private void imageZoom(View view) {
