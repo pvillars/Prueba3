@@ -32,7 +32,7 @@ public class EventService {
         event.setDescription(null);
         new Nodes().eventList(key).setValue(event);
 
-        new Nodes().myEventList(event.getUidUser()).setValue(event);
+        new Nodes().myEventList(event.getUidUser(),key).setValue(event);
 
     }
 

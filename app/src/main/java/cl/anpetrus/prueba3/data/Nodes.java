@@ -34,7 +34,9 @@ public class Nodes {
 
     public DatabaseReference eventList(String key){ return eventsList().child(key); }
 
-    public DatabaseReference myEventList(String key){ return myEventsList().child(key); }
+    public DatabaseReference myEventList(String uid){ return myEventsList().child(uid); }
+
+    public DatabaseReference myEventList(String uid, String key){ return myEventsList().child(uid).child(key); }
 
   //  public Event getEventByKey(String key){    }
 }

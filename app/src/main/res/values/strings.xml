@@ -107,4 +107,5 @@
     </string>
 
     <string name="title_activity_image_event">ImageEventActivity</string>
+    <string name="title_activity_event">EventActivity</string>
 </resources>

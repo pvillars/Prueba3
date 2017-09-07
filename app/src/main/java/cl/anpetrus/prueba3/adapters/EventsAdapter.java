@@ -5,7 +5,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +33,7 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
     }
 
     @Override
-    protected void populateViewHolder(EventHolder viewHolder, Event model, int position) {
+    protected void populateViewHolder(final EventHolder viewHolder, final Event model, int position) {
 
         viewHolder.name.setText(model.getName());
         String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(model.getStart());
@@ -48,7 +47,7 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context, "CLICKS", Toast.LENGTH_SHORT).show();
+                listener.clicked(model.getKey());
             }
         });
 

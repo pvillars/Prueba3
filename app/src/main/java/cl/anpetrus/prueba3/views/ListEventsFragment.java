@@ -1,5 +1,6 @@
 package cl.anpetrus.prueba3.views;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,7 +16,7 @@ import cl.anpetrus.prueba3.adapters.EventsAdapter;
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.listeners.EventListener;
-import cl.anpetrus.prueba3.models.Event;
+import cl.anpetrus.prueba3.views.events.EventActivity;
 
 
 public class ListEventsFragment extends Fragment implements EventListener {
@@ -57,7 +58,11 @@ public class ListEventsFragment extends Fragment implements EventListener {
 
 
     @Override
-    public void clicked(Event event) {
+    public void clicked(String keyEvent) {
+
+        Intent intent = new Intent(getContext(),EventActivity.class);
+        intent.putExtra(EventActivity.KEY_EVENT, keyEvent);
+        startActivity(intent);
 
     }
 
@@ -76,7 +81,7 @@ public class ListEventsFragment extends Fragment implements EventListener {
     @Override
     public void showMyEvents() {
         Toast.makeText(getContext(), "My EVENT "+new CurrentUser().email(), Toast.LENGTH_SHORT).show();
-        adapter = new EventsAdapter(this,getContext(),new Nodes().myEventsList());
+        adapter = new EventsAdapter(this,getContext(),new Nodes().myEventList(new CurrentUser().sanitizedEmail(new CurrentUser().email())));
         recyclerView.setAdapter(adapter);
     }
 }

@@ -84,6 +84,9 @@ public class ActionEventActivity extends AppCompatActivity {
         FloatingActionButton actionFab = (FloatingActionButton) findViewById(R.id.actionsFab);
 
         progressBar = (ProgressBar) findViewById(R.id.loadingBar);
+
+        progressBar.setVisibility(View.INVISIBLE);
+
         actionExtra = getIntent().getStringExtra(ID_ACTION);
 
         nameTv = (EditText) findViewById(R.id.nameNewEt);
