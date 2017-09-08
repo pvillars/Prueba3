@@ -7,11 +7,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -22,6 +19,7 @@ import cl.anpetrus.prueba3.EventCallback;
 import cl.anpetrus.prueba3.EventValidator;
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.models.Event;
+import cl.anpetrus.prueba3.views.ImageActivity;
 
 public class EventActivity extends AppCompatActivity implements EventCallback{
 
@@ -30,6 +28,7 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
     private EventValidator validator;
 
     private ImageView image;
+    private String imageUrl;
     private TextView name,description,dateStart, timeStart;
 
     private AppBarLayout appBar;
@@ -84,6 +83,11 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                Intent intent = new Intent(EventActivity.this, ImageActivity.class);
+                intent.putExtra(ImageActivity.KEY_URL,imageUrl);
+                startActivity(intent);
+                /*
                 if(imageZoom) {
                     ViewGroup.LayoutParams params = appBar.getLayoutParams();
                     params.height = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -102,7 +106,7 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
                     //image.setScaleType(ImageView.ScaleType.CENTER_CROP);
                     //fabZoomFake.setImageResource(R.mipmap.ic_zoom_in_white_24dp);
                     imageZoom = true;
-                }
+                }*/
             }
         });
 
@@ -113,8 +117,10 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
     public void loadEvent(Event event) {
         Picasso.with(this)
                 .load(event.getImage())
-                .fit()
+                //.fit()
                 .into(image);
+        imageUrl = event.getImage();
+
         name.setText(event.getName());
         description.setText(event.getDescription());
         keyEvent = event.getKey();
