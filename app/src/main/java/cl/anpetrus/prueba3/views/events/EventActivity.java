@@ -15,10 +15,10 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 
-import cl.anpetrus.prueba3.EventCallback;
-import cl.anpetrus.prueba3.EventValidator;
 import cl.anpetrus.prueba3.R;
+import cl.anpetrus.prueba3.callbacks.EventCallback;
 import cl.anpetrus.prueba3.models.Event;
+import cl.anpetrus.prueba3.validators.EventValidator;
 import cl.anpetrus.prueba3.views.ImageActivity;
 
 public class EventActivity extends AppCompatActivity implements EventCallback{

@@ -14,10 +14,10 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import cl.anpetrus.prueba3.EventListValidator;
-import cl.anpetrus.prueba3.MenuValidator;
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.data.CurrentUser;
+import cl.anpetrus.prueba3.validators.EventListValidator;
+import cl.anpetrus.prueba3.validators.MenuValidator;
 import cl.anpetrus.prueba3.views.ListEventsFragment;
 import cl.anpetrus.prueba3.views.MainActivity;
 import cl.anpetrus.prueba3.views.login.LoginActivity;

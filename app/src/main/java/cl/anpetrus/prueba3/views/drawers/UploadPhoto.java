@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -63,16 +64,17 @@ public class UploadPhoto {
         });
         return url;
     }
-    public String toFirebaseUpdate(String path, final Event event){
+    public String toFirebaseUpdate(String path, final Event event, boolean  withNewPhoto){
 
         final CurrentUser currentUser = new CurrentUser();
         final String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
 
+        if(withNewPhoto){
+            Log.d("XXX","if "+path);
             String folder = userUidEmail + "/";
             String photoName = event.getKey() + ".jpg";
             String baseUrl = "gs://prueba3-1df0c.appspot.com/events/";
             String refUrl = baseUrl + folder + photoName;
-
 
             StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
             storageReference.putFile(Uri.parse(path)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -81,10 +83,15 @@ public class UploadPhoto {
                     @SuppressWarnings("VisibleForTests")
                     String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
                     url = fullUrl[0];
-
+                    event.setImage(fullUrl[0]);
+                    Log.d("XXX","if url "+url);
                     new EventService().updateEvent(event);
                 }
             });
+        }else{
+            Log.d("XXX","else "+path);
+            new EventService().updateEvent(event);
+        }
         return url;
     }
 

@@ -1,5 +1,7 @@
 package cl.anpetrus.prueba3.services;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,7 +40,7 @@ public class EventService {
 
     public void updateEvent(Event event) {
         String key = event.getKey();
-
+        Log.d("UPDATE", "updateEvent" +key);
         new Nodes().event(key).setValue(event);
 
         event.setDescription(null);

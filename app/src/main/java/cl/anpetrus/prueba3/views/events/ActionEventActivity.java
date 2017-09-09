@@ -40,14 +40,16 @@ import java.util.Date;
 import java.util.Map;
 
 import cl.anpetrus.prueba3.R;
+import cl.anpetrus.prueba3.callbacks.ActionEventCallback;
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.services.UserService;
+import cl.anpetrus.prueba3.validators.ActionEventValidator;
 import cl.anpetrus.prueba3.views.drawers.UploadPhoto;
 
-public class ActionEventActivity extends AppCompatActivity {
+public class ActionEventActivity extends AppCompatActivity implements ActionEventCallback {
 
     public final static String ID_ACTION = "cl.anpetrus.prueba3.views.events.ActionEventActivity.ID_ACTION";
     public final static String KEY_EVENT = "cl.anpetrus.prueba3.views.events.ActionEventActivity.KEY_EVENT";
@@ -74,6 +76,8 @@ public class ActionEventActivity extends AppCompatActivity {
     Date date = new Date();
     ProgressBar progressBar;
 
+    ActionEventValidator actionValidator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,9 +89,11 @@ public class ActionEventActivity extends AppCompatActivity {
 
         progressBar = (ProgressBar) findViewById(R.id.loadingBar);
 
+        withNewPhoto = false;
+
         progressBar.setVisibility(View.INVISIBLE);
 
-
+        actionValidator = new ActionEventValidator(this);
 
         nameTv = (EditText) findViewById(R.id.nameNewEt);
         descriptionTv = (EditText) findViewById(R.id.descriptionNewEt);
@@ -114,35 +120,17 @@ public class ActionEventActivity extends AppCompatActivity {
                     eventMaster.setDescription(descriptionTv.getText().toString());
                     eventMaster.setStart(startDateTime);
                     eventMaster.setUidUser(userUidEmail);
-                    eventMaster.setImage(imageUri);
 
-                    if (isValidData(eventMaster)) {
-                        if (actionExtra.equals(ID_ACTION_UPDATE)) {
+                    pathPhoto = imageUri;
+
+                    actionValidator.saveOrUpdate(eventMaster, pathPhoto, actionExtra, withNewPhoto);
 
 
-                            pathPhoto = imageUri;
-                            new UserService().saveCurrentUser();
-                            new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(pathPhoto, eventMaster);
-                            Toast.makeText(ActionEventActivity.this, "Evento actualizado exitozamente", Toast.LENGTH_SHORT).show();
-                            finish();
-
-                        } else {
-                            new UserService().saveCurrentUser();
-                            new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, eventMaster);
-                            Toast.makeText(ActionEventActivity.this, "Evento agregado exitozamente", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    }
                 } catch (ParseException e) {
                     Log.e("PARSEEXCPTION", "Error en parsear FechaStart" + e);
                 }
-
-
             }
         });
-
-
-
 
         if (actionExtra.equals(ID_ACTION_NEW)) {
             getSupportActionBar().setTitle("Nuevo Evento");
@@ -152,7 +140,7 @@ public class ActionEventActivity extends AppCompatActivity {
             dateStartEt.setText(dateString);
             timeStartEt.setText(timeString);
         } else if (actionExtra.equals(ID_ACTION_UPDATE)) {
-           // progressBar.setVisibility(View.VISIBLE);
+            // progressBar.setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("Actualizar Evento");
             String keyEvent = getIntent().getStringExtra(KEY_EVENT);
             saveUpdateBtn.setText("ACTUALIZAR");
@@ -216,8 +204,6 @@ public class ActionEventActivity extends AppCompatActivity {
 
         nameTv.setHint("NOMBRE");
         descriptionTv.setHint("DESCRIPCIÓN");
-
-
 
 
         dateStartEt.setOnClickListener(new View.OnClickListener() {
@@ -302,27 +288,6 @@ public class ActionEventActivity extends AppCompatActivity {
         }
     }
 
-    private boolean isValidData(Event event) {
-        if (event.getName().trim().length() > 0) {
-            if (event.getDescription().trim().length() > 0) {
-                if (event.getStart().after(new Date())) {
-                    if (imageUri != null) {
-                        return true;
-                    } else {
-                        Toast.makeText(this, "Favor agrega una imagen", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(this, "Favor ingresar fecha y hora posterior a la actual", Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(this, "Favor ingresar descripción", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, "Favor ingresar nombre", Toast.LENGTH_LONG).show();
-        }
-        return false;
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -333,6 +298,7 @@ public class ActionEventActivity extends AppCompatActivity {
         }
     }
 
+    boolean withNewPhoto;
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -347,6 +313,7 @@ public class ActionEventActivity extends AppCompatActivity {
             Log.d("PATH", pathPhoto);
             pathPhoto = "file://" + pathPhoto;
             setPhoto(pathPhoto);
+            withNewPhoto = true;
             // new UploadPhoto(this).toFirebase(path, "");
         } else {
             // requestPhoto();
@@ -365,7 +332,7 @@ public class ActionEventActivity extends AppCompatActivity {
                 .error(R.mipmap.ic_insert_photo_white_36dp)
                 .placeholder(R.mipmap.ic_launcher_round)
                 .into(imageIv);
-        Log.d("IMAGE",url);
+        Log.d("IMAGE", url);
         ViewGroup.LayoutParams params = imageIv.getLayoutParams();
         params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -414,6 +381,51 @@ public class ActionEventActivity extends AppCompatActivity {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
+    }
+
+    @Override
+    public void updateEvent(boolean withNewPhoto) {
+        //pathPhoto = imageUri;
+        new UserService().saveCurrentUser();
+        Log.d("XXX", imageUri);
+        new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(imageUri, eventMaster, withNewPhoto);
+        Toast.makeText(ActionEventActivity.this, "Evento actualizado exitozamente", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void saveEvent() {
+        new UserService().saveCurrentUser();
+        new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, eventMaster);
+        Toast.makeText(ActionEventActivity.this, "Evento agregado exitozamente", Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void errorMessage(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+    }
+
+
+    private boolean isValidData(Event event) {
+        if (event.getName().trim().length() > 0) {
+            if (event.getDescription().trim().length() > 0) {
+                if (event.getStart().after(new Date())) {
+                    if (imageUri != null) {
+                        return true;
+                    } else {
+                        Toast.makeText(this, "Favor agrega una imagen", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Toast.makeText(this, "Favor ingresar fecha y hora posterior a la actual", Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(this, "Favor ingresar descripción", Toast.LENGTH_LONG).show();
+            }
+        } else {
+            Toast.makeText(this, "Favor ingresar nombre", Toast.LENGTH_LONG).show();
+        }
+        return false;
     }
 }
 

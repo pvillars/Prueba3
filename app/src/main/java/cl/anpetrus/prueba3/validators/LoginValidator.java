@@ -1,5 +1,6 @@
-package cl.anpetrus.prueba3;
+package cl.anpetrus.prueba3.validators;
 
+import cl.anpetrus.prueba3.callbacks.LoginCallBack;
 import cl.anpetrus.prueba3.data.CurrentUser;
 
 /**

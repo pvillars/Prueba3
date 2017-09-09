@@ -1,4 +1,4 @@
-package cl.anpetrus.prueba3;
+package cl.anpetrus.prueba3.callbacks;
 
 import cl.anpetrus.prueba3.models.Event;
 

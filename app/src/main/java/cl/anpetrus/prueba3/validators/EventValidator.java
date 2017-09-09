@@ -1,9 +1,10 @@
-package cl.anpetrus.prueba3;
+package cl.anpetrus.prueba3.validators;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import cl.anpetrus.prueba3.callbacks.EventCallback;
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;

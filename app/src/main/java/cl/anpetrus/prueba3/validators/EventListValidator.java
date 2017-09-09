@@ -1,4 +1,4 @@
-package cl.anpetrus.prueba3;
+package cl.anpetrus.prueba3.validators;
 
 import cl.anpetrus.prueba3.listeners.EventListener;
 
@@ -10,7 +10,7 @@ public class EventListValidator {
 
     EventListener listener;
 
-    public enum TYPE_EVENTS{MY_EVENTS, SOON_EVENTS;}
+    public enum TYPE_EVENTS{MY_EVENTS, SOON_EVENTS}
 
     public EventListValidator(EventListener listener) {
         this.listener = listener;

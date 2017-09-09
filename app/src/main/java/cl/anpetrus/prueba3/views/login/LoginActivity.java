@@ -10,9 +10,9 @@ import com.firebase.ui.auth.ResultCodes;
 
 import java.util.Arrays;
 
-import cl.anpetrus.prueba3.LoginCallBack;
-import cl.anpetrus.prueba3.LoginValidator;
 import cl.anpetrus.prueba3.R;
+import cl.anpetrus.prueba3.callbacks.LoginCallBack;
+import cl.anpetrus.prueba3.validators.LoginValidator;
 import cl.anpetrus.prueba3.views.MainActivity;
 
 public class LoginActivity extends AppCompatActivity  implements LoginCallBack{

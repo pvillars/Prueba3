@@ -10,8 +10,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import cl.anpetrus.prueba3.MenuCallback;
 import cl.anpetrus.prueba3.R;
+import cl.anpetrus.prueba3.callbacks.MenuCallback;
 import cl.anpetrus.prueba3.views.events.ActionEventActivity;
 
 public class MainActivity extends AppCompatActivity implements MenuCallback {
