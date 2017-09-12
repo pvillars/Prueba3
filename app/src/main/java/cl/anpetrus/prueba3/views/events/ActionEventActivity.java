@@ -62,6 +62,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     private LinearLayout addEventLl;
     private AppBarLayout appBar;
     private String pathPhoto;
+    private String pathPhotoThumbails;
     private FloatingActionButton galleryFab;
     private FloatingActionButton photoFab;
     private MagicalPermissions magicalPermissions;
@@ -310,8 +311,13 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             Toast.makeText(this, "OKA", Toast.LENGTH_SHORT).show();
             Bitmap photo = magicalCamera.getPhoto();
             pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Flash", MagicalCamera.JPEG, true);
-            Log.d("PATH", pathPhoto);
             pathPhoto = "file://" + pathPhoto;
+
+            magicalCamera.setResizePhoto(20);
+            photo = magicalCamera.getPhoto();
+            pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Flash", MagicalCamera.JPEG, true);
+            pathPhotoThumbails = "file://" + pathPhotoThumbails;
+
             setPhoto(pathPhoto);
             withNewPhoto = true;
             // new UploadPhoto(this).toFirebase(path, "");
@@ -396,7 +402,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     @Override
     public void saveEvent() {
         new UserService().saveCurrentUser();
-        new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, eventMaster);
+        new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto,pathPhotoThumbails, eventMaster);
         Toast.makeText(ActionEventActivity.this, "Evento agregado exitozamente", Toast.LENGTH_SHORT).show();
         finish();
     }

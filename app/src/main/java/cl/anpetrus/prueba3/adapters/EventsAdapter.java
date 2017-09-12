@@ -40,7 +40,7 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
         viewHolder.dateStart.setText(dateString);
         viewHolder.nameAuthor.setText(model.getUidUser());
         Picasso.with(context)
-                .load(model.getImage())
+                .load(model.getImageThumbnail())
                 .fit()
                 .into(viewHolder.image);
 

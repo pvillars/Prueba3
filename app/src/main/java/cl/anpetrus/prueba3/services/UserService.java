@@ -26,4 +26,9 @@ public class UserService {
         new Nodes().user(key).setValue(user);
 
     }
+
+    public void userPhoto(){
+
+    }
+
 }

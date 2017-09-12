@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -19,6 +20,7 @@ import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
+import cl.anpetrus.prueba3.models.User;
 import cl.anpetrus.prueba3.services.EventService;
 
 /**
@@ -35,7 +37,42 @@ public class UploadPhoto {
 
     String url;
 
-    public String toFirebase(final String path, final Event newEvent) {
+    public void toFirebase(String path){
+
+        final CurrentUser currentUser = new CurrentUser();
+        String folder = new EmailProcessor().sanitizedEmail(currentUser.email())+"/";
+        String photoName = "avatar.jpg";
+        String baseUrl = "gs://prueba3-1df0c.appspot.com/users/avatar/";
+        String refUrl = baseUrl + folder +photoName;
+
+        StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
+        storageReference.putFile(Uri.parse(path)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Toast.makeText(context, "onSuccess PHOTO", Toast.LENGTH_SHORT).show();
+                @SuppressWarnings("VisibleForTests")
+                String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
+
+                String url = fullUrl[0];
+
+                String key = new EmailProcessor().sanitizedEmail(currentUser.email());
+
+                User user = new User();
+                user.setEmail(currentUser.email());
+                user.setName(currentUser.getCurrentUser().getDisplayName());
+                user.setPhoto(url);
+                user.setUid(key);
+
+
+                //new Nodes().users().child(key).setValue(user);
+                new Nodes().user(key).setValue(user);
+            }
+        });
+
+
+    }
+
+    public String toFirebase(final String path,final String pathThumbs, final Event newEvent) {
 
         final CurrentUser currentUser = new CurrentUser();
         final String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
@@ -45,8 +82,8 @@ public class UploadPhoto {
         String photoName = key + ".jpg";
         String baseUrl = "gs://prueba3-1df0c.appspot.com/events/";
         String baseUrlThumbs = "gs://prueba3-1df0c.appspot.com/events_thumbs/";
-        String refUrl = baseUrl + folder + photoName;
-        String refUrlThumbs = baseUrlThumbs + folder + photoName;
+        final String refUrl = baseUrl + folder + photoName;
+        final String refUrlThumbs = baseUrlThumbs + folder + photoName;
 
 
         final StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
@@ -58,7 +95,19 @@ public class UploadPhoto {
                 url = fullUrl[0];
                 newEvent.setImage(url);
 
-                new EventService().saveEvent(newEvent);
+                final StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrlThumbs);
+                storageReference.putFile(Uri.parse(pathThumbs)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        @SuppressWarnings("VisibleForTests")
+                        String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
+                        url = fullUrl[0];
+                        newEvent.setImageThumbnail(url);
+
+                        new EventService().saveEvent(newEvent);
+                    }
+                });
+
 
             }
         });

@@ -12,7 +12,7 @@
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp"
-
+android:src="@mipmap/ic_launcher_round"
         app:siBorderColor="@android:color/white"
         app:siBorderWidth="6dp" />
 
@@ -29,6 +29,15 @@
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
+    <TextView
+        android:id="@+id/takeAvatarTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingRight="8dp"
+        android:clickable="true"
+        android:layout_below="@+id/avatarCi"
+        android:text="Cambiar Foto" />
 
     <View
         android:id="@+id/viewLine"
@@ -37,6 +46,8 @@
         android:layout_below="@+id/emailTv"
         android:layout_marginTop="8dp"
         android:background="@android:color/white" />
+
+
 
     <TextView
         android:id="@+id/soonEventsTv"
