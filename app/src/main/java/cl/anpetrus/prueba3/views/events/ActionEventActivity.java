@@ -189,7 +189,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             public void onClick(View view) {
                 magicalPermissions = new MagicalPermissions(ActionEventActivity.this, permissions());
                 magicalCamera = new MagicalCamera(ActionEventActivity.this, PHOTO_SIZE, magicalPermissions);
-                magicalCamera.selectedPicture("my_header_name");
+                magicalCamera.selectedPicture("Seleccione una Imagen");
             }
         });
 
@@ -310,12 +310,12 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         if (RESULT_OK == resultCode) {
             Toast.makeText(this, "OKA", Toast.LENGTH_SHORT).show();
             Bitmap photo = magicalCamera.getPhoto();
-            pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Flash", MagicalCamera.JPEG, true);
+            pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
             pathPhoto = "file://" + pathPhoto;
 
             magicalCamera.setResizePhoto(20);
             photo = magicalCamera.getPhoto();
-            pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Flash", MagicalCamera.JPEG, true);
+            pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
             pathPhotoThumbails = "file://" + pathPhotoThumbails;
 
             setPhoto(pathPhoto);
@@ -394,7 +394,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         //pathPhoto = imageUri;
         new UserService().saveCurrentUser();
         Log.d("XXX", imageUri);
-        new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(imageUri, eventMaster, withNewPhoto);
+        new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(imageUri,pathPhotoThumbails, eventMaster, withNewPhoto);
         Toast.makeText(ActionEventActivity.this, "Evento actualizado exitozamente", Toast.LENGTH_SHORT).show();
         finish();
     }

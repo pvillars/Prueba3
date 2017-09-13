@@ -30,6 +30,7 @@ import cl.anpetrus.prueba3.services.EventService;
 public class UploadPhoto {
 
     private Context context;
+    private StorageReference storageReference;
 
     public UploadPhoto(Context context) {
         this.context = context;
@@ -86,7 +87,7 @@ public class UploadPhoto {
         final String refUrlThumbs = baseUrlThumbs + folder + photoName;
 
 
-        final StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
+        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
         storageReference.putFile(Uri.parse(path)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -95,7 +96,7 @@ public class UploadPhoto {
                 url = fullUrl[0];
                 newEvent.setImage(url);
 
-                final StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrlThumbs);
+                storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrlThumbs);
                 storageReference.putFile(Uri.parse(pathThumbs)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -113,7 +114,7 @@ public class UploadPhoto {
         });
         return url;
     }
-    public String toFirebaseUpdate(String path, final Event event, boolean  withNewPhoto){
+    public String toFirebaseUpdate(final String path, final String pathThumbs, final Event event, boolean  withNewPhoto){
 
         final CurrentUser currentUser = new CurrentUser();
         final String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
@@ -123,9 +124,11 @@ public class UploadPhoto {
             String folder = userUidEmail + "/";
             String photoName = event.getKey() + ".jpg";
             String baseUrl = "gs://prueba3-1df0c.appspot.com/events/";
-            String refUrl = baseUrl + folder + photoName;
+            String baseUrlThumbs = "gs://prueba3-1df0c.appspot.com/events_thumbs/";
+            final String refUrl = baseUrl + folder + photoName;
+            final String refUrlThumbs = baseUrlThumbs + folder + photoName;
 
-            StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
+            storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
             storageReference.putFile(Uri.parse(path)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -134,7 +137,19 @@ public class UploadPhoto {
                     url = fullUrl[0];
                     event.setImage(fullUrl[0]);
                     Log.d("XXX","if url "+url);
-                    new EventService().updateEvent(event);
+
+                    storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrlThumbs);
+                    storageReference.putFile(Uri.parse(pathThumbs)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            @SuppressWarnings("VisibleForTests")
+                            String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
+                            url = fullUrl[0];
+                            event.setImageThumbnail(fullUrl[0]);
+                            Log.d("XXX","if url "+url);
+                            new EventService().updateEvent(event);
+                        }
+                    });
                 }
             });
         }else{

@@ -32,6 +32,7 @@ public class EventService {
         event.setKey(key);
         new Nodes().event(key).setValue(event);
         event.setDescription(null);
+        event.setImage(null);
         new Nodes().eventList(key).setValue(event);
 
         new Nodes().myEventList(event.getUidUser(),key).setValue(event);
@@ -44,6 +45,7 @@ public class EventService {
         new Nodes().event(key).setValue(event);
 
         event.setDescription(null);
+        event.setImage(null);
         new Nodes().eventList(key).setValue(event);
         new Nodes().myEventList(event.getUidUser(),key).setValue(event);
 
