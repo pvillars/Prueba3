@@ -1,4 +1,4 @@
-package cl.anpetrus.prueba3.views;
+package cl.anpetrus.prueba3.views.main;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +10,7 @@ import cl.anpetrus.prueba3.R;
 
 public class ImageActivity extends AppCompatActivity {
 
-    public static final String KEY_URL = "cl.anpetrus.prueba3.views.ImageActivity.KEY_URL";
+    public static final String KEY_URL = "cl.anpetrus.prueba3.views.main.ImageActivity.KEY_URL";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -22,7 +24,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -48,6 +49,7 @@ import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.services.UserService;
 import cl.anpetrus.prueba3.validators.ActionEventValidator;
 import cl.anpetrus.prueba3.views.drawers.UploadPhoto;
+import cl.anpetrus.prueba3.views.main.LoadingFragment;
 
 public class ActionEventActivity extends AppCompatActivity implements ActionEventCallback {
 
@@ -75,9 +77,10 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
     String dateString, timeString;
     Date date = new Date();
-    ProgressBar progressBar;
+    //ProgressBar progressBar;
 
     ActionEventValidator actionValidator;
+    private LoadingFragment loadingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,18 +91,13 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         eventMaster = new Event();
         FloatingActionButton actionFab = (FloatingActionButton) findViewById(R.id.actionsFab);
 
-        progressBar = (ProgressBar) findViewById(R.id.loadingBar);
-
         withNewPhoto = false;
-
-        progressBar.setVisibility(View.INVISIBLE);
 
         actionValidator = new ActionEventValidator(this);
 
         nameTv = (EditText) findViewById(R.id.nameNewEt);
         descriptionTv = (EditText) findViewById(R.id.descriptionNewEt);
         imageIv = (ImageView) findViewById(R.id.imageIv);
-
 
         dateStartEt = (EditText) findViewById(R.id.dateStartEt);
         timeStartEt = (EditText) findViewById(R.id.timeStartEt);
@@ -110,6 +108,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         saveUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                loadingShow();
                 CurrentUser currentUser = new CurrentUser();
                 String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
 
@@ -129,6 +128,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
                 } catch (ParseException e) {
                     Log.e("PARSEEXCPTION", "Error en parsear FechaStart" + e);
+                    loadingDismiss();
                 }
             }
         });
@@ -141,10 +141,11 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             dateStartEt.setText(dateString);
             timeStartEt.setText(timeString);
         } else if (actionExtra.equals(ID_ACTION_UPDATE)) {
-            // progressBar.setVisibility(View.VISIBLE);
             getSupportActionBar().setTitle("Actualizar Evento");
             String keyEvent = getIntent().getStringExtra(KEY_EVENT);
             saveUpdateBtn.setText("ACTUALIZAR");
+            loadingShow();
+
             new Nodes().event(keyEvent).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -160,12 +161,13 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                     setPhoto(event.getImage());
                     Toast.makeText(ActionEventActivity.this, event.getImage(), Toast.LENGTH_LONG).show();
                     Log.d("IOP", event.getImage());
-                    progressBar.setVisibility(View.INVISIBLE);
+                    loadingDismiss();
+                   // progressBar.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    progressBar.setVisibility(View.INVISIBLE);
+                  //  progressBar.setVisibility(View.INVISIBLE);
                 }
             });
         } else {
@@ -395,43 +397,48 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         new UserService().saveCurrentUser();
         Log.d("XXX", imageUri);
         new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(imageUri,pathPhotoThumbails, eventMaster, withNewPhoto);
-        Toast.makeText(ActionEventActivity.this, "Evento actualizado exitozamente", Toast.LENGTH_SHORT).show();
-        finish();
+        Toast.makeText(this, "Actualizando Evento", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void saveEvent() {
         new UserService().saveCurrentUser();
         new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto,pathPhotoThumbails, eventMaster);
-        Toast.makeText(ActionEventActivity.this, "Evento agregado exitozamente", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Agregando Evento", Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void loadFinished() {
         finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        //loadingDismiss();
+       // Toast.makeText(this, "Evento Agregado", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void errorMessage(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+        loadingDismiss();
     }
 
-
-    private boolean isValidData(Event event) {
-        if (event.getName().trim().length() > 0) {
-            if (event.getDescription().trim().length() > 0) {
-                if (event.getStart().after(new Date())) {
-                    if (imageUri != null) {
-                        return true;
-                    } else {
-                        Toast.makeText(this, "Favor agrega una imagen", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Toast.makeText(this, "Favor ingresar fecha y hora posterior a la actual", Toast.LENGTH_LONG).show();
-                }
-            } else {
-                Toast.makeText(this, "Favor ingresar descripción", Toast.LENGTH_LONG).show();
-            }
-        } else {
-            Toast.makeText(this, "Favor ingresar nombre", Toast.LENGTH_LONG).show();
+    private void loadingShow(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("loading");
+        if (prev != null) {
+            ft.remove(prev);
         }
-        return false;
+        ft.addToBackStack(null);
+        loadingFragment = LoadingFragment.newInstance();
+        loadingFragment.show(ft, "loading");
+    }
+
+    private void loadingDismiss(){
+        loadingFragment.dismiss();
     }
 }
 

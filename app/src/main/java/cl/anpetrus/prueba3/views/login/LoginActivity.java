@@ -13,7 +13,7 @@ import java.util.Arrays;
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.callbacks.LoginCallBack;
 import cl.anpetrus.prueba3.validators.LoginValidator;
-import cl.anpetrus.prueba3.views.MainActivity;
+import cl.anpetrus.prueba3.views.main.MainActivity;
 
 public class LoginActivity extends AppCompatActivity  implements LoginCallBack{
 

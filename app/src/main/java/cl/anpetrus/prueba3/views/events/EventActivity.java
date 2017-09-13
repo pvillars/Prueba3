@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -19,7 +20,7 @@ import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.callbacks.EventCallback;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.validators.EventValidator;
-import cl.anpetrus.prueba3.views.ImageActivity;
+import cl.anpetrus.prueba3.views.main.ImageActivity;
 
 public class EventActivity extends AppCompatActivity implements EventCallback{
 
@@ -75,8 +76,8 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
 
         validator = new EventValidator(this);
 
-        String key = getIntent().getStringExtra(KEY_EVENT);
-        validator.loadEvent(key);
+       // String key = getIntent().getStringExtra(KEY_EVENT);
+       // validator.loadEvent(key);
 
         appBar = (AppBarLayout) findViewById(R.id.app_bar);
 
@@ -111,6 +112,21 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
         });
 
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String key = getIntent().getStringExtra(KEY_EVENT);
+        validator.loadEvent(key);
+        Toast.makeText(this, "HHH", Toast.LENGTH_SHORT).show();
     }
 
     @Override

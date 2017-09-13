@@ -30,12 +30,12 @@ import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.validators.EventListValidator;
 import cl.anpetrus.prueba3.validators.MenuValidator;
-import cl.anpetrus.prueba3.views.ListEventsFragment;
-import cl.anpetrus.prueba3.views.MainActivity;
 import cl.anpetrus.prueba3.views.drawers.PhotoUserCallback;
 import cl.anpetrus.prueba3.views.drawers.PhotoUserValidation;
 import cl.anpetrus.prueba3.views.drawers.UploadPhoto;
 import cl.anpetrus.prueba3.views.login.LoginActivity;
+import cl.anpetrus.prueba3.views.main.ListEventsFragment;
+import cl.anpetrus.prueba3.views.main.MainActivity;
 
 import static android.app.Activity.RESULT_OK;
 import static cl.anpetrus.prueba3.R.layout.fragment_drawer_menu;
@@ -155,7 +155,7 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
     }
 
     private void requestSelfie() {
-        Toast.makeText(getContext(), "XAXA", Toast.LENGTH_SHORT).show();
+
         new AlertDialog.Builder(getActivity())
                 .setTitle("Selfie :)")
                 .setMessage("para completar el registro debes tener una selfie actualizada")

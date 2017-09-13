@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -26,7 +26,7 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
     private Context context;
 
 
-    public EventsAdapter(EventListener listener, Context context, DatabaseReference reference) {
+    public EventsAdapter(EventListener listener, Context context, Query reference) {
         super(Event.class, R.layout.list_item_event, EventHolder.class, reference);
         this.listener = listener;
         this.context = context;
@@ -35,21 +35,21 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
     @Override
     protected void populateViewHolder(final EventHolder viewHolder, final Event model, int position) {
 
-        viewHolder.name.setText(model.getName());
-        String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(model.getStart());
-        viewHolder.dateStart.setText(dateString);
-        viewHolder.nameAuthor.setText(model.getUidUser());
-        Picasso.with(context)
-                .load(model.getImageThumbnail())
-                .fit()
-                .into(viewHolder.image);
+            viewHolder.name.setText(model.getName());
+            String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(model.getStart());
+            viewHolder.dateStart.setText(dateString);
+            viewHolder.nameAuthor.setText(model.getUidUser());
+            Picasso.with(context)
+                    .load(model.getImageThumbnail())
+                    .fit()
+                    .into(viewHolder.image);
 
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.clicked(model.getKey());
-            }
-        });
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.clicked(model.getKey());
+                }
+            });
 
     }
 

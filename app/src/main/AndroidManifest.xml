@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".views.MainActivity"
+            android:name=".views.main.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
@@ -36,7 +36,7 @@
             android:name=".views.events.EventActivity"
             android:label="@string/title_activity_event"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".views.ImageActivity"></activity>
+        <activity android:name=".views.main.ImageActivity"></activity>
     </application>
 
 </manifest>

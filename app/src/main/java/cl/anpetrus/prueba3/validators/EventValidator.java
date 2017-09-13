@@ -23,7 +23,7 @@ public class EventValidator {
     }
 
     public void loadEvent(String keyEvent){
-        new Nodes().event(keyEvent).addValueEventListener(new ValueEventListener() {
+        new Nodes().event(keyEvent).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Event event = dataSnapshot.getValue(Event.class);

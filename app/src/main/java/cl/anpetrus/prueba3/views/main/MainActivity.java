@@ -1,4 +1,4 @@
-package cl.anpetrus.prueba3.views;
+package cl.anpetrus.prueba3.views.main;
 
 import android.content.Intent;
 import android.os.Bundle;

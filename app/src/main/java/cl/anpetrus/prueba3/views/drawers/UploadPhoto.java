@@ -16,6 +16,7 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.FileInputStream;
 
+import cl.anpetrus.prueba3.callbacks.ActionEventCallback;
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;
@@ -29,11 +30,13 @@ import cl.anpetrus.prueba3.services.EventService;
 
 public class UploadPhoto {
 
+    private ActionEventCallback callback;
     private Context context;
     private StorageReference storageReference;
 
     public UploadPhoto(Context context) {
         this.context = context;
+        this.callback = (ActionEventCallback)context;
     }
 
     String url;
@@ -67,6 +70,7 @@ public class UploadPhoto {
 
                 //new Nodes().users().child(key).setValue(user);
                 new Nodes().user(key).setValue(user);
+
             }
         });
 
@@ -104,8 +108,8 @@ public class UploadPhoto {
                         String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
                         url = fullUrl[0];
                         newEvent.setImageThumbnail(url);
-
                         new EventService().saveEvent(newEvent);
+                        callback.loadFinished();
                     }
                 });
 
@@ -114,6 +118,8 @@ public class UploadPhoto {
         });
         return url;
     }
+
+
     public String toFirebaseUpdate(final String path, final String pathThumbs, final Event event, boolean  withNewPhoto){
 
         final CurrentUser currentUser = new CurrentUser();
@@ -148,6 +154,7 @@ public class UploadPhoto {
                             event.setImageThumbnail(fullUrl[0]);
                             Log.d("XXX","if url "+url);
                             new EventService().updateEvent(event);
+                            callback.loadFinished();
                         }
                     });
                 }
@@ -155,6 +162,7 @@ public class UploadPhoto {
         }else{
             Log.d("XXX","else "+path);
             new EventService().updateEvent(event);
+            callback.loadFinished();
         }
         return url;
     }
