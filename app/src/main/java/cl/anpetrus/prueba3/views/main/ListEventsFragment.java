@@ -18,6 +18,7 @@ import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.adapters.EventsAdapter;
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.data.EmailProcessor;
+import cl.anpetrus.prueba3.data.MyDate;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.listeners.EventListener;
 import cl.anpetrus.prueba3.views.events.EventActivity;
@@ -89,7 +90,12 @@ public class ListEventsFragment extends Fragment implements EventListener {
     @Override
     public void showSoonEvents() {
         getActivity().setTitle("Proxímos Eventos");
-        adapter = new EventsAdapter(this, getContext(), new Nodes().eventsList());
+        Query dbR = new Nodes()
+                .eventsList()
+                .orderByChild("start")
+                .startAt(new MyDate().toString());
+        adapter = new EventsAdapter(this, getContext(),dbR);
+
         recyclerView.setAdapter(adapter);
         showEvents = ShowEvents.SOON;
     }

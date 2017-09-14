@@ -3,6 +3,7 @@ package cl.anpetrus.prueba3.validators;
 import java.util.Date;
 
 import cl.anpetrus.prueba3.callbacks.ActionEventCallback;
+import cl.anpetrus.prueba3.data.MyDate;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.views.events.ActionEventActivity;
 
@@ -35,7 +36,7 @@ public class ActionEventValidator {
     private boolean isValidData(Event event, String imageUri){
         if (event.getName().trim().length() > 0) {
             if (event.getDescription().trim().length() > 0) {
-                if (event.getStart().after(new Date())) {
+                if (MyDate.toDate(event.getStart()).after(new Date())) {
                     if (imageUri != null) {
                         return true;
                     } else {

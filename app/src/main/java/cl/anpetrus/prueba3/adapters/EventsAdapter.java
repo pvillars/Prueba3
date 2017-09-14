@@ -13,6 +13,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 
 import cl.anpetrus.prueba3.R;
+import cl.anpetrus.prueba3.data.MyDate;
 import cl.anpetrus.prueba3.listeners.EventListener;
 import cl.anpetrus.prueba3.models.Event;
 
@@ -36,7 +37,7 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
     protected void populateViewHolder(final EventHolder viewHolder, final Event model, int position) {
 
             viewHolder.name.setText(model.getName());
-            String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(model.getStart());
+            String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(MyDate.toDate(model.getStart()));
             viewHolder.dateStart.setText(dateString);
             viewHolder.nameAuthor.setText(model.getUidUser());
             Picasso.with(context)

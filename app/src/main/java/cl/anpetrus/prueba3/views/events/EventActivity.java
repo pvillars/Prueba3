@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.callbacks.EventCallback;
+import cl.anpetrus.prueba3.data.MyDate;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.validators.EventValidator;
 import cl.anpetrus.prueba3.views.main.ImageActivity;
@@ -140,8 +141,8 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
         name.setText(event.getName());
         description.setText(event.getDescription());
         keyEvent = event.getKey();
-        String dateString = new SimpleDateFormat("dd-MM-yyyy").format(event.getStart());
-        String timeString = new SimpleDateFormat("HH:mm").format(event.getStart()) + " Hrs.";
+        String dateString = new SimpleDateFormat("dd-MM-yyyy").format(MyDate.toDate(event.getStart()));
+        String timeString = new SimpleDateFormat("HH:mm").format(MyDate.toDate(event.getStart())) + " Hrs.";
         dateStart.setText(dateString);
         timeStart.setText(timeString);
 

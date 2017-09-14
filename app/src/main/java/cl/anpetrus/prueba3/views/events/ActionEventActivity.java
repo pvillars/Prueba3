@@ -44,6 +44,7 @@ import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.callbacks.ActionEventCallback;
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.data.EmailProcessor;
+import cl.anpetrus.prueba3.data.MyDate;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.services.UserService;
@@ -118,7 +119,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                     startDateTime = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").parse(dateString);
                     eventMaster.setName(nameTv.getText().toString());
                     eventMaster.setDescription(descriptionTv.getText().toString());
-                    eventMaster.setStart(startDateTime);
+                    eventMaster.setStart(new MyDate(startDateTime).toString());
                     eventMaster.setUidUser(userUidEmail);
 
                     pathPhoto = imageUri;
@@ -153,7 +154,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                     eventMaster = event;
                     nameTv.setText(event.getName());
                     descriptionTv.setText(event.getDescription());
-                    date = event.getStart();
+                    date = MyDate.toDate(event.getStart());
                     dateString = new SimpleDateFormat("dd-MM-yyyy").format(date);
                     timeString = new SimpleDateFormat("HH:mm:ss").format(date);
                     dateStartEt.setText(dateString);

@@ -122,36 +122,24 @@ public class UploadPhoto {
 
     public String toFirebaseUpdate(final String path, final String pathThumbs, final Event event, boolean  withNewPhoto){
 
-        final CurrentUser currentUser = new CurrentUser();
-        final String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
 
         if(withNewPhoto){
             Log.d("XXX","if "+path);
-            String folder = userUidEmail + "/";
-            String photoName = event.getKey() + ".jpg";
-            String baseUrl = "gs://prueba3-1df0c.appspot.com/events/";
-            String baseUrlThumbs = "gs://prueba3-1df0c.appspot.com/events_thumbs/";
-            final String refUrl = baseUrl + folder + photoName;
-            final String refUrlThumbs = baseUrlThumbs + folder + photoName;
+            final String refUrl = event.getImage();
+            final String refUrlThumbs = event.getImageThumbnail();
 
             storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
             storageReference.putFile(Uri.parse(path)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    @SuppressWarnings("VisibleForTests")
-                    String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
-                    url = fullUrl[0];
-                    event.setImage(fullUrl[0]);
+
                     Log.d("XXX","if url "+url);
 
                     storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrlThumbs);
                     storageReference.putFile(Uri.parse(pathThumbs)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            @SuppressWarnings("VisibleForTests")
-                            String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
-                            url = fullUrl[0];
-                            event.setImageThumbnail(fullUrl[0]);
+
                             Log.d("XXX","if url "+url);
                             new EventService().updateEvent(event);
                             callback.loadFinished();

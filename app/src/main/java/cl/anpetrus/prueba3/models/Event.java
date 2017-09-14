@@ -1,7 +1,5 @@
 package cl.anpetrus.prueba3.models;
 
-import java.util.Date;
-
 /**
  * Created by Petrus on 30-08-2017.
  */
@@ -14,7 +12,7 @@ public class Event {
     String image;
     String imageThumbnail;
     String uidUser;
-    Date start;
+    String start;
 
 
     public Event() {
@@ -60,11 +58,11 @@ public class Event {
         this.uidUser = uidUser;
     }
 
-    public Date getStart() {
+    public String getStart() {
         return start;
     }
 
-    public void setStart(Date start) {
+    public void setStart(String start) {
         this.start = start;
     }
 
