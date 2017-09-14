@@ -61,6 +61,7 @@ public class ListEventsFragment extends Fragment implements EventListener {
         //DividerItemDecoration dividerItemDecoration =new DividerItemDecoration(this,LinearLayoutManager.VERTICAL);
         //dividerItemDecoration.setDrawable(...);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+
         showEvents = ShowEvents.SOON;
         fragment = this;
 

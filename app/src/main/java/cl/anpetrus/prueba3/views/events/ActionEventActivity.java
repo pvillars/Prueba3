@@ -82,6 +82,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
     ActionEventValidator actionValidator;
     private LoadingFragment loadingFragment;
+    private FloatingActionButton selectPhotoFab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +91,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         eventMaster = new Event();
-        FloatingActionButton actionFab = (FloatingActionButton) findViewById(R.id.actionsFab);
+        selectPhotoFab = (FloatingActionButton) findViewById(R.id.actionsFab);
 
         withNewPhoto = false;
 
@@ -143,6 +144,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             timeStartEt.setText(timeString);
         } else if (actionExtra.equals(ID_ACTION_UPDATE)) {
             getSupportActionBar().setTitle("Actualizar Evento");
+            imageIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
             String keyEvent = getIntent().getStringExtra(KEY_EVENT);
             saveUpdateBtn.setText("ACTUALIZAR");
             loadingShow();
@@ -196,7 +198,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             }
         });
 
-        actionFab.setOnClickListener(new View.OnClickListener() {
+        selectPhotoFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 imageZoom(view);
@@ -274,7 +276,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             }
         });
 
-
+        moveFabs();
     }
 
     private int getPixels(int dp) {
@@ -323,6 +325,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
             setPhoto(pathPhoto);
             withNewPhoto = true;
+
             // new UploadPhoto(this).toFirebase(path, "");
         } else {
             // requestPhoto();
@@ -347,6 +350,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         imageIv.setLayoutParams(params);
         imageUri = url;
+
     }
 
     private void imageZoom(View view) {
@@ -368,20 +372,33 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
         photoFab.animate().rotation(360).setDuration(400).start();
         galleryFab.animate().rotation(360).setDuration(400).start();
-        photoFab.animate().translationY(-getPixels(80)).setDuration(400).start();
-        galleryFab.animate().translationY(-getPixels(160)).setDuration(400).start();
+        photoFab.animate().translationY(-getPixels(90)).setDuration(400).start();
+        galleryFab.animate().translationY(-getPixels(164)).setDuration(400).start();
+
+        if(withNewPhoto||actionExtra.equals(ID_ACTION_UPDATE)){
+            imageIv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        }
     }
 
     private void imageZoomOut() {
         photoFab.animate().rotation(0).setDuration(400).start();
         galleryFab.animate().rotation(0).setDuration(400).start();
-        photoFab.animate().translationY(0).setDuration(400).start();
-        galleryFab.animate().translationY(0).setDuration(400).start();
+        photoFab.animate().translationY(-getPixels(16)).setDuration(400).start();
+        galleryFab.animate().translationY(-getPixels(16)).setDuration(400).start();
 
         ViewGroup.LayoutParams params = appBar.getLayoutParams();
         params.height = getPixels(180);
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         appBar.setLayoutParams(params);
+        if(withNewPhoto||actionExtra.equals(ID_ACTION_UPDATE)){
+            imageIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        }
+    }
+
+    private void moveFabs(){
+        selectPhotoFab.animate().translationY(-getPixels(16)).start();
+        photoFab.animate().translationY(-getPixels(16)).start();
+        galleryFab.animate().translationY(-getPixels(16)).start();
     }
 
     private String[] permissions() {

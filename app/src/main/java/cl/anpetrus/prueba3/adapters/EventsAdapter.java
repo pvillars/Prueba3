@@ -28,7 +28,7 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
 
 
     public EventsAdapter(EventListener listener, Context context, Query reference) {
-        super(Event.class, R.layout.list_item_event, EventHolder.class, reference);
+        super(Event.class, R.layout.list_item_card_event, EventHolder.class, reference);
         this.listener = listener;
         this.context = context;
     }
@@ -66,6 +66,7 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
             name = itemView.findViewById(R.id.nameListTv);
             dateStart = itemView.findViewById(R.id.dateStartListTv);
             nameAuthor = itemView.findViewById(R.id.authorNameListTv);
+            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         }
     }
