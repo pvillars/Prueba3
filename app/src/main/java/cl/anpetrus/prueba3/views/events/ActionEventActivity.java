@@ -70,7 +70,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     private FloatingActionButton photoFab;
     private MagicalPermissions magicalPermissions;
     private MagicalCamera magicalCamera;
-    private int PHOTO_SIZE = 80;
+    private int PHOTO_SIZE = 20;
     private String imageUri;
 
     private Event eventMaster;
@@ -339,6 +339,11 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     }
 
     private void setPhoto(String url) {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        int width = metrics.widthPixels; // ancho absoluto en pixels
+        int height = metrics.heightPixels;
+        imageIv.setMaxWidth(width);
         Picasso.with(this)
                 .load(url)
                 .error(R.mipmap.ic_insert_photo_white_36dp)
@@ -459,8 +464,3 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         loadingFragment.dismiss();
     }
 }
-
-
-
-
-
