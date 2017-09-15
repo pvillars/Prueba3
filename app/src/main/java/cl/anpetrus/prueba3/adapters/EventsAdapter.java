@@ -21,14 +21,14 @@ import cl.anpetrus.prueba3.models.Event;
  * Created by USUARIO on 06-09-2017.
  */
 
-public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.EventHolder> {
+public class EventsAdapter extends FirebaseRecyclerAdapter<Event, EventsAdapter.EventHolder> {
 
     private EventListener listener;
     private Context context;
 
 
     public EventsAdapter(EventListener listener, Context context, Query reference) {
-        super(Event.class, R.layout.list_item_card_event, EventHolder.class, reference);
+        super(Event.class, R.layout.list_item_event, EventHolder.class, reference);
         this.listener = listener;
         this.context = context;
     }
@@ -36,28 +36,31 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
     @Override
     protected void populateViewHolder(final EventHolder viewHolder, final Event model, int position) {
 
-            viewHolder.name.setText(model.getName());
-            String dateString = new SimpleDateFormat("dd-MM-yyyy HH:mm").format(MyDate.toDate(model.getStart()));
-            viewHolder.dateStart.setText(dateString);
-            viewHolder.nameAuthor.setText(model.getUidUser());
-            Picasso.with(context)
-                    .load(model.getImageThumbnail())
-                    .fit()
-                    .into(viewHolder.image);
+        viewHolder.name.setText(model.getName());
+        String dateString = new SimpleDateFormat("dd-MM-yyyy").format(MyDate.toDate(model.getStart()));
+        String timeString = new SimpleDateFormat("HH:mm").format(MyDate.toDate(model.getStart())) + " Hrs";
+        viewHolder.dateStart.setText(dateString);
+        viewHolder.timeStart.setText(timeString);
+        viewHolder.nameAuthor.setText(model.getUidUser());
 
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    listener.clicked(model.getKey());
-                }
-            });
+        Picasso.with(context)
+                .load(model.getImageThumbnail())
+                // .fit()
+                .into(viewHolder.image);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listener.clicked(model.getKey());
+            }
+        });
 
     }
 
-    static public class EventHolder extends RecyclerView.ViewHolder{
+    static public class EventHolder extends RecyclerView.ViewHolder {
 
         ImageView image;
-        TextView name, dateStart, nameAuthor;
+        TextView name, dateStart, timeStart, nameAuthor;
 
 
         public EventHolder(View itemView) {
@@ -65,8 +68,9 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event,EventsAdapter.E
             image = itemView.findViewById(R.id.imageListIv);
             name = itemView.findViewById(R.id.nameListTv);
             dateStart = itemView.findViewById(R.id.dateStartListTv);
+            timeStart = itemView.findViewById(R.id.timeStartListTv);
             nameAuthor = itemView.findViewById(R.id.authorNameListTv);
-            image.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
 
         }
     }

@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="16dp"
+    android:paddingRight="8dp"
+    android:paddingLeft="16dp"
     tools:context="cl.anpetrus.prueba3.views.login.drawer.DrawerFragment">
 
     <com.github.siyamed.shapeimageview.CircularImageView
@@ -12,7 +14,7 @@
         android:layout_height="120dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="54dp"
-android:src="@mipmap/ic_launcher_round"
+        android:src="@mipmap/ic_launcher_round"
         app:siBorderColor="@android:color/white"
         app:siBorderWidth="6dp" />
 
@@ -33,11 +35,11 @@ android:src="@mipmap/ic_launcher_round"
         android:id="@+id/takeAvatarTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:paddingRight="8dp"
         android:clickable="true"
-        android:layout_below="@+id/avatarCi"
-        android:text="Cambiar Foto" />
+        android:text="Cambiar Foto"
+        android:layout_above="@+id/emailTv"
+        android:layout_alignParentEnd="true" />
 
     <View
         android:id="@+id/viewLine"
@@ -47,23 +49,29 @@ android:src="@mipmap/ic_launcher_round"
         android:layout_marginTop="8dp"
         android:background="@android:color/white" />
 
-
-
     <TextView
+        android:layout_marginTop="16dp"
         android:id="@+id/soonEventsTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
+        android:textStyle="bold"
+        android:drawableLeft="@mipmap/ic_add_white_24dp"
+        android:textSize="16sp"
         android:layout_below="@+id/viewLine"
-        android:text="Proximos Eventos" />
+        android:text="  Proximos Eventos" />
 
     <TextView
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="16dp"
+        android:drawableLeft="@mipmap/ic_add_white_24dp"
         android:id="@+id/myEventsTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/soonEventsTv"
         android:clickable="true"
-        android:text="Mis Eventos" />
+        android:text="  Mis Eventos" />
 
     <TextView
         android:id="@+id/logoutTv"

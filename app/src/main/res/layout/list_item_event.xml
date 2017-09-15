@@ -1,38 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="190dp"
     android:paddingBottom="8dp"
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
+    android:layout_gravity="center"
     android:paddingTop="8dp">
 
     <ImageView
         android:id="@+id/imageListIv"
-        android:layout_width="56dp"
-        android:layout_height="56dp" />
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:src="@mipmap/choose_image"/>
 
     <TextView
         android:id="@+id/nameListTv"
-        android:layout_toRightOf="@+id/imageListIv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:textSize="20dp" />
+        android:text="Sozidad Alkoholika"
+        android:layout_marginTop="8dp"
+        android:textSize="22sp"
+        android:layout_below="@+id/imageListIv"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/dateStartListTv"
-        android:layout_toRightOf="@+id/imageListIv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/nameListTv"
+        android:layout_below="@+id/imageListIv"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        android:text="2017-12-21"
+        android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/timeStartListTv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dateStartListTv"
+        android:layout_alignParentRight="true"
+        android:textSize="16sp"
+        android:text="21:00 hrs"
         android:textStyle="italic" />
 
     <TextView
         android:id="@+id/authorNameListTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/nameListTv" />
+        android:text="s@@@@@@@@@@@s"
+        android:layout_above="@+id/dateStartListTv"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

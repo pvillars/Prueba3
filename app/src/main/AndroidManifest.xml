@@ -37,10 +37,6 @@
             android:label="@string/title_activity_event"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".views.main.ImageActivity" />
-        <activity
-            android:name=".views.ScrollingActivity"
-            android:label="@string/title_activity_scrolling"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
