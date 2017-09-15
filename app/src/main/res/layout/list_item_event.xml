@@ -13,13 +13,25 @@
         android:layout_width="match_parent"
         android:layout_height="120dp"
         android:scaleType="centerCrop"
-        android:src="@mipmap/choose_image"/>
+        android:background="@drawable/side_nav_bar"
+        android:src="@mipmap/choose_image"
+
+    />
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:scaleType="centerCrop"
+        android:background="@drawable/shadow_image_item"
+        android:layout_above="@+id/nameListTv"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/nameListTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Sozidad Alkoholika"
+        android:text="Sozidad Alkoholika..."
         android:layout_marginTop="8dp"
         android:textSize="22sp"
         android:layout_below="@+id/imageListIv"
@@ -50,6 +62,7 @@
         android:id="@+id/authorNameListTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textColor="@android:color/white"
         android:text="s@@@@@@@@@@@s"
         android:layout_above="@+id/dateStartListTv"
         android:layout_alignParentEnd="true" />

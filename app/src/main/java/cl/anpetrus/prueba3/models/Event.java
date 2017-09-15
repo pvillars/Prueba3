@@ -12,10 +12,18 @@ public class Event {
     String image;
     String imageThumbnail;
     String uidUser;
+    String nameUser;
     String start;
 
-
     public Event() {
+    }
+
+    public String getNameUser() {
+        return nameUser;
+    }
+
+    public void setNameUser(String nameUser) {
+        this.nameUser = nameUser;
     }
 
     public String getKey() {

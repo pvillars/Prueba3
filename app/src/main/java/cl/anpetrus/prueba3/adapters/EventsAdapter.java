@@ -36,12 +36,17 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event, EventsAdapter.
     @Override
     protected void populateViewHolder(final EventHolder viewHolder, final Event model, int position) {
 
-        viewHolder.name.setText(model.getName());
+        String name = model.getName();
+        if(name.length() > 21){
+            name = name.substring(0,17) + "...";
+        }
+
+        viewHolder.name.setText(name);
         String dateString = new SimpleDateFormat("dd-MM-yyyy").format(MyDate.toDate(model.getStart()));
         String timeString = new SimpleDateFormat("HH:mm").format(MyDate.toDate(model.getStart())) + " Hrs";
         viewHolder.dateStart.setText(dateString);
         viewHolder.timeStart.setText(timeString);
-        viewHolder.nameAuthor.setText(model.getUidUser());
+        viewHolder.nameAuthor.setText(model.getNameUser());
 
         Picasso.with(context)
                 .load(model.getImageThumbnail())
