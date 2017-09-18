@@ -28,11 +28,11 @@ import java.util.Map;
 
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.data.CurrentUser;
+import cl.anpetrus.prueba3.services.UploadPhoto;
 import cl.anpetrus.prueba3.validators.EventListValidator;
 import cl.anpetrus.prueba3.validators.MenuValidator;
 import cl.anpetrus.prueba3.views.drawers.PhotoUserCallback;
 import cl.anpetrus.prueba3.views.drawers.PhotoUserValidation;
-import cl.anpetrus.prueba3.views.drawers.UploadPhoto;
 import cl.anpetrus.prueba3.views.login.LoginActivity;
 import cl.anpetrus.prueba3.views.main.ListEventsFragment;
 import cl.anpetrus.prueba3.views.main.MainActivity;

@@ -1,4 +1,4 @@
-package cl.anpetrus.prueba3.views.drawers;
+package cl.anpetrus.prueba3.services;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -22,7 +22,6 @@ import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.models.User;
-import cl.anpetrus.prueba3.services.EventService;
 
 /**
  * Created by Petrus on 30-08-2017.
@@ -77,7 +76,7 @@ public class UploadPhoto {
 
     }
 
-    public String toFirebase(final String path,final String pathThumbs, final Event newEvent) {
+    public String toFirebase(final String path, final String pathThumbs, final Event newEvent) {
 
         final CurrentUser currentUser = new CurrentUser();
         final String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
@@ -153,6 +152,28 @@ public class UploadPhoto {
             callback.loadFinished();
         }
         return url;
+    }
+
+    public static Bitmap getResizedBitmap(Bitmap bm, int newWidth){
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        float propor =  (float) width / newWidth;
+        float newHeight = (float) height / propor;
+
+
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight =  newHeight / height;
+
+        // CREATE A MATRIX FOR THE MANIPULATION
+        Matrix matrix = new Matrix();
+        // RESIZE THE BIT MAP
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // "RECREATE" THE NEW BITMAP
+        Bitmap resizedBitmap = Bitmap.createBitmap(
+                bm, 0, 0, width, height, matrix, false);
+        return resizedBitmap;
     }
 
     public static Bitmap getResizedBitmap(Bitmap bm, int newWidth, int newHeight) {

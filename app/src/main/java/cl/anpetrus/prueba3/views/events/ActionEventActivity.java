@@ -34,6 +34,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -47,9 +48,9 @@ import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.MyDate;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
+import cl.anpetrus.prueba3.services.UploadPhoto;
 import cl.anpetrus.prueba3.services.UserService;
 import cl.anpetrus.prueba3.validators.ActionEventValidator;
-import cl.anpetrus.prueba3.views.drawers.UploadPhoto;
 import cl.anpetrus.prueba3.views.main.LoadingFragment;
 
 public class ActionEventActivity extends AppCompatActivity implements ActionEventCallback {
@@ -70,7 +71,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     private FloatingActionButton photoFab;
     private MagicalPermissions magicalPermissions;
     private MagicalCamera magicalCamera;
-    private int PHOTO_SIZE = 20;
+    private int PHOTO_SIZE = 80;
     private String imageUri;
 
     private Event eventMaster;
@@ -309,18 +310,28 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        try{
         //CALL THIS METHOD EVER
         magicalCamera.resultPhoto(requestCode, resultCode, data);
 
         if (RESULT_OK == resultCode) {
             Toast.makeText(this, "OKA", Toast.LENGTH_SHORT).show();
             Bitmap photo = magicalCamera.getPhoto();
+            Bitmap photoThumbs;
+
+            photoThumbs = UploadPhoto.getResizedBitmap(photo,380);
+            photo = UploadPhoto.getResizedBitmap(photo,800);
+
+
             pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
             pathPhoto = "file://" + pathPhoto;
 
-            magicalCamera.setResizePhoto(20);
-            photo = magicalCamera.getPhoto();
-            pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
+          // magicalCamera.setResizePhoto(20);
+          //  Bitmap photoThumbs = magicalCamera.getPhoto();
+
+           // photoThumbs = UploadPhoto.getResizedBitmap(photo,200);
+            pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photoThumbs, "Imagen", "EventosThumbs", MagicalCamera.JPEG, true);
             pathPhotoThumbails = "file://" + pathPhotoThumbails;
 
             setPhoto(pathPhoto);
@@ -330,6 +341,9 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         } else {
             // requestPhoto();
             // error con camara
+        }}catch(Exception e){
+            Log.d("TAKEP",e.toString());
+            Toast.makeText(this, "Error inesperado, favor intente nuevamente", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -351,7 +365,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                 .into(imageIv);
         Log.d("IMAGE", url);
         ViewGroup.LayoutParams params = imageIv.getLayoutParams();
-        params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+        params.height = LinearLayout.LayoutParams.MATCH_PARENT;
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         imageIv.setLayoutParams(params);
         imageUri = url;
@@ -419,20 +433,26 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         //pathPhoto = imageUri;
         new UserService().saveCurrentUser();
         Log.d("XXX", imageUri);
-        new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(imageUri,pathPhotoThumbails, eventMaster, withNewPhoto);
+        new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(imageUri, pathPhotoThumbails, eventMaster, withNewPhoto);
         Toast.makeText(this, "Actualizando Evento", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void saveEvent() {
         new UserService().saveCurrentUser();
-        new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto,pathPhotoThumbails, eventMaster);
+        new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, pathPhotoThumbails, eventMaster);
+
         Toast.makeText(this, "Agregando Evento", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
     public void loadFinished() {
+        File photo = new File(pathPhoto);
+        photo.delete();
+        photo = new File(pathPhotoThumbails);
+        photo.delete();
+        photo = null;
         finish();
     }
 
@@ -462,5 +482,15 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
     private void loadingDismiss(){
         loadingFragment.dismiss();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(imageZoom){
+            super.onBackPressed();
+        }else{
+            imageZoomOut();
+            imageZoom = true;
+        }
     }
 }

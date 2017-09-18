@@ -6,7 +6,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -44,8 +43,10 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // setSupportActionBar(toolbar);
+
+       // getSupportActionBar().hide();
 
         editFab = (FloatingActionButton) findViewById(R.id.editFab);
         editFab.setVisibility(View.GONE);
@@ -132,11 +133,12 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
 
     @Override
     public void loadEvent(Event event) {
+        imageUrl = event.getImage();
         Picasso.with(this)
-                .load(event.getImage())
+                .load(event.getImageThumbnail())
                 //.fit()
                 .into(image);
-        imageUrl = event.getImage();
+
 
         name.setText(event.getName());
         description.setText(event.getDescription());
@@ -147,6 +149,7 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
         timeStart.setText(timeString);
 
     }
+
 
     @Override
     public void showEdit() {
