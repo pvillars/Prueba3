@@ -108,7 +108,7 @@ public class UploadPhoto {
                         url = fullUrl[0];
                         newEvent.setImageThumbnail(url);
                         new EventService().saveEvent(newEvent);
-                        callback.loadFinished();
+                        callback.loadFinished(true);
                     }
                 });
 
@@ -141,7 +141,7 @@ public class UploadPhoto {
 
                             Log.d("XXX","if url "+url);
                             new EventService().updateEvent(event);
-                            callback.loadFinished();
+                            callback.loadFinished(true);
                         }
                     });
                 }
@@ -149,7 +149,7 @@ public class UploadPhoto {
         }else{
             Log.d("XXX","else "+path);
             new EventService().updateEvent(event);
-            callback.loadFinished();
+            callback.loadFinished(false);
         }
         return url;
     }

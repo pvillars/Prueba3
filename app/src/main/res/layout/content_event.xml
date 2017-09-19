@@ -14,7 +14,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="22dp"
         android:gravity="center_horizontal"
+        android:text="Gran Baile Gran a benficioFDFDS "
         android:textSize="22sp"
         android:textStyle="bold" />
 
@@ -23,6 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:text="21/12/2017"
         android:textSize="20sp" />
 
     <TextView
@@ -30,14 +35,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
+        android:text="19:30 hrs."
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/detailDescriptionTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:gravity="center_horizontal"
+        android:text="Gran Baile Gran a benficioññ ;;;
+jdklskdlsds
+dsdsdsd
+d dsjdksjdks  jkdjksdjks
+dsjkdsjds  lkdkskkdsd kksdsds
+dskdlsjdkls
+ dskldklskds
+ djksjdkjskds
+  kdlskdls kksdsd
+sdsdsdsk
+dsdsdsdsds
+ dsdsdsdsd
+fsfsfdfds
+fsdfsdf
+df
+fsfd
+
+sdf
+s
+df
+sdf
+sdf
+"
         android:textSize="16sp" />
 
 </LinearLayout>

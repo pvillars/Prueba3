@@ -166,12 +166,12 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                     Toast.makeText(ActionEventActivity.this, event.getImage(), Toast.LENGTH_LONG).show();
                     Log.d("IOP", event.getImage());
                     loadingDismiss();
-                   // progressBar.setVisibility(View.INVISIBLE);
+                    // progressBar.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                  //  progressBar.setVisibility(View.INVISIBLE);
+                    //  progressBar.setVisibility(View.INVISIBLE);
                 }
             });
         } else {
@@ -311,38 +311,39 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        try{
-        //CALL THIS METHOD EVER
-        magicalCamera.resultPhoto(requestCode, resultCode, data);
+        try {
+            //CALL THIS METHOD EVER
+            magicalCamera.resultPhoto(requestCode, resultCode, data);
 
-        if (RESULT_OK == resultCode) {
-            Toast.makeText(this, "OKA", Toast.LENGTH_SHORT).show();
-            Bitmap photo = magicalCamera.getPhoto();
-            Bitmap photoThumbs;
+            if (RESULT_OK == resultCode) {
+                Toast.makeText(this, "OKA", Toast.LENGTH_SHORT).show();
+                Bitmap photo = magicalCamera.getPhoto();
+                Bitmap photoThumbs;
 
-            photoThumbs = UploadPhoto.getResizedBitmap(photo,380);
-            photo = UploadPhoto.getResizedBitmap(photo,800);
+                photoThumbs = UploadPhoto.getResizedBitmap(photo, 380);
+                photo = UploadPhoto.getResizedBitmap(photo, 800);
 
 
-            pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
-            pathPhoto = "file://" + pathPhoto;
+                pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
+                pathPhoto = "file://" + pathPhoto;
 
-          // magicalCamera.setResizePhoto(20);
-          //  Bitmap photoThumbs = magicalCamera.getPhoto();
+                // magicalCamera.setResizePhoto(20);
+                //  Bitmap photoThumbs = magicalCamera.getPhoto();
 
-           // photoThumbs = UploadPhoto.getResizedBitmap(photo,200);
-            pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photoThumbs, "Imagen", "EventosThumbs", MagicalCamera.JPEG, true);
-            pathPhotoThumbails = "file://" + pathPhotoThumbails;
+                // photoThumbs = UploadPhoto.getResizedBitmap(photo,200);
+                pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photoThumbs, "Imagen", "EventosThumbs", MagicalCamera.JPEG, true);
+                pathPhotoThumbails = "file://" + pathPhotoThumbails;
 
-            setPhoto(pathPhoto);
-            withNewPhoto = true;
+                setPhoto(pathPhoto);
+                withNewPhoto = true;
 
-            // new UploadPhoto(this).toFirebase(path, "");
-        } else {
-            // requestPhoto();
-            // error con camara
-        }}catch(Exception e){
-            Log.d("TAKEP",e.toString());
+                // new UploadPhoto(this).toFirebase(path, "");
+            } else {
+                // requestPhoto();
+                // error con camara
+            }
+        } catch (Exception e) {
+            Log.d("TAKEP", e.toString());
             Toast.makeText(this, "Error inesperado, favor intente nuevamente", Toast.LENGTH_LONG).show();
         }
     }
@@ -394,7 +395,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         photoFab.animate().translationY(-getPixels(90)).setDuration(400).start();
         galleryFab.animate().translationY(-getPixels(164)).setDuration(400).start();
 
-        if(withNewPhoto||actionExtra.equals(ID_ACTION_UPDATE)){
+        if (withNewPhoto || actionExtra.equals(ID_ACTION_UPDATE)) {
             imageIv.setScaleType(ImageView.ScaleType.FIT_CENTER);
         }
     }
@@ -409,12 +410,12 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         params.height = getPixels(180);
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         appBar.setLayoutParams(params);
-        if(withNewPhoto||actionExtra.equals(ID_ACTION_UPDATE)){
+        if (withNewPhoto || actionExtra.equals(ID_ACTION_UPDATE)) {
             imageIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
     }
 
-    private void moveFabs(){
+    private void moveFabs() {
         selectPhotoFab.animate().translationY(-getPixels(16)).start();
         photoFab.animate().translationY(-getPixels(16)).start();
         galleryFab.animate().translationY(-getPixels(16)).start();
@@ -447,12 +448,14 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     }
 
     @Override
-    public void loadFinished() {
-        File photo = new File(pathPhoto);
-        photo.delete();
-        photo = new File(pathPhotoThumbails);
-        photo.delete();
-        photo = null;
+    public void loadFinished(boolean withPhoto) {
+        if (withPhoto) {
+            File photo = new File(pathPhoto);
+            photo.delete();
+            photo = new File(pathPhotoThumbails);
+            photo.delete();
+            photo = null;
+        }
         finish();
     }
 
@@ -460,7 +463,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     public void finish() {
         super.finish();
         //loadingDismiss();
-       // Toast.makeText(this, "Evento Agregado", Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, "Evento Agregado", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -469,7 +472,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         loadingDismiss();
     }
 
-    private void loadingShow(){
+    private void loadingShow() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         Fragment prev = getSupportFragmentManager().findFragmentByTag("loading");
         if (prev != null) {
@@ -480,15 +483,15 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         loadingFragment.show(ft, "loading");
     }
 
-    private void loadingDismiss(){
+    private void loadingDismiss() {
         loadingFragment.dismiss();
     }
 
     @Override
     public void onBackPressed() {
-        if(imageZoom){
+        if (imageZoom) {
             super.onBackPressed();
-        }else{
+        } else {
             imageZoomOut();
             imageZoom = true;
         }
