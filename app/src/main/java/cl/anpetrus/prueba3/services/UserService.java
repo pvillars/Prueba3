@@ -12,16 +12,18 @@ import cl.anpetrus.prueba3.models.User;
 public class UserService {
 
     public UserService(){}
-    public void saveCurrentUser() {
+
+    public void saveCurrentUser(String urlPhoto) {
 
         final CurrentUser currentUser = new CurrentUser();
 
+        String key = EmailProcessor.sanitizedEmail(currentUser.email());
         User user = new User();
         user.setEmail(currentUser.email());
         user.setName(currentUser.getCurrentUser().getDisplayName());
-        // user.setPhoto(url);
-        user.setUid(currentUser.uid());
-        String key = EmailProcessor.sanitizedEmail(currentUser.email());
+        if(urlPhoto!=null)
+            user.setPhoto(urlPhoto);
+        user.setUid(key);
 
         new Nodes().user(key).setValue(user);
 

@@ -55,7 +55,9 @@ public class ListEventsFragment extends Fragment implements EventListener {
 
         swipeRefreshLayout = view.findViewById(R.id.reloadSr);
 
-        recyclerView = (RecyclerView) view.findViewById(R.id.eventsRv);
+        swipeRefreshLayout.setRefreshing(true);
+
+        recyclerView =  view.findViewById(R.id.eventsRv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         //DividerItemDecoration dividerItemDecoration =new DividerItemDecoration(this,LinearLayoutManager.VERTICAL);
@@ -85,11 +87,13 @@ public class ListEventsFragment extends Fragment implements EventListener {
 
     @Override
     public void dataChange() {
-
+       // swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showSoonEvents() {
+
+        swipeRefreshLayout.setRefreshing(true);
         getActivity().setTitle("Proxímos Eventos");
         Query dbR = new Nodes()
                 .eventsList()
@@ -99,10 +103,14 @@ public class ListEventsFragment extends Fragment implements EventListener {
 
         recyclerView.setAdapter(adapter);
         showEvents = ShowEvents.SOON;
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showMyEvents() {
+
+        swipeRefreshLayout.setRefreshing(true);
         getActivity().setTitle("Mis Eventos");
         Query dbR = new Nodes()
                 .myEventList(EmailProcessor.sanitizedEmail(new CurrentUser().email()))
@@ -111,6 +119,8 @@ public class ListEventsFragment extends Fragment implements EventListener {
         adapter = new EventsAdapter(this, getContext(), dbR);
         recyclerView.setAdapter(adapter);
         showEvents = ShowEvents.MY;
+
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override

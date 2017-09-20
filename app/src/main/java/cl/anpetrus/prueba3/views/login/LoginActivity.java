@@ -12,6 +12,7 @@ import java.util.Arrays;
 
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.callbacks.LoginCallBack;
+import cl.anpetrus.prueba3.services.UserService;
 import cl.anpetrus.prueba3.validators.LoginValidator;
 import cl.anpetrus.prueba3.views.main.MainActivity;
 
@@ -39,7 +40,8 @@ public class LoginActivity extends AppCompatActivity  implements LoginCallBack{
         if (RC_SIGN_IN == requestCode) {
             Toast.makeText(this, "resultCode "+resultCode, Toast.LENGTH_SHORT).show();
             if (ResultCodes.OK == resultCode) {
-               success();
+                new UserService().saveCurrentUser(null);
+                success();
             }
 
         }

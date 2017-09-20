@@ -27,6 +27,7 @@ public class PhotoUserValidation {
 
     public void validate() {
         String key = EmailProcessor.sanitizedEmail(new CurrentUser().email());
+
        new Nodes().user(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

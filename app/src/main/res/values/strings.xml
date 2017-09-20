@@ -109,4 +109,5 @@
     <string name="title_activity_image_event">ImageEventActivity</string>
     <string name="title_activity_event">EventActivity</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="title_activity_test">TESTActivity</string>
 </resources>

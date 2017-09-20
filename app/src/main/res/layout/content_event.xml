@@ -1,75 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="cl.anpetrus.prueba3.views.events.EventActivity"
     tools:showIn="@layout/activity_event">
 
-    <TextView
-        android:id="@+id/detailNameTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="22dp"
-        android:gravity="center_horizontal"
-        android:text="Gran Baile Gran a benficioFDFDS "
-        android:textSize="22sp"
-        android:textStyle="bold" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/detailDateStartTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="21/12/2017"
-        android:textSize="20sp" />
+        <TextView
+            android:id="@+id/detailNameTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="22dp"
+            android:gravity="center_horizontal"
+            android:textSize="22sp"
+            android:textStyle="bold" />
 
-    <TextView
-        android:id="@+id/detailTimeStartTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:text="19:30 hrs."
-        android:textSize="18sp" />
+        <TextView
+            android:id="@+id/detailDateStartTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/detailDescriptionTv"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:gravity="center_horizontal"
-        android:text="Gran Baile Gran a benficioññ ;;;
-jdklskdlsds
-dsdsdsd
-d dsjdksjdks  jkdjksdjks
-dsjkdsjds  lkdkskkdsd kksdsds
-dskdlsjdkls
- dskldklskds
- djksjdkjskds
-  kdlskdls kksdsd
-sdsdsdsk
-dsdsdsdsds
- dsdsdsdsd
-fsfsfdfds
-fsdfsdf
-df
-fsfd
+        <TextView
+            android:id="@+id/detailTimeStartTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textSize="18sp" />
 
-sdf
-s
-df
-sdf
-sdf
-"
-        android:textSize="16sp" />
+        <TextView
+            android:id="@+id/detailDescriptionTv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="16dp"
+            android:gravity="center_horizontal"
 
+            android:textSize="16sp" />
 </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

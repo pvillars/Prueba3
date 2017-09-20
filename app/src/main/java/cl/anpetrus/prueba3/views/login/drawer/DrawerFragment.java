@@ -22,13 +22,15 @@ import com.frosquivel.magicalcamera.MagicalPermissions;
 import com.github.siyamed.shapeimageview.CircularImageView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.data.CurrentUser;
-import cl.anpetrus.prueba3.services.UploadPhoto;
+import cl.anpetrus.prueba3.services.UploadAvatarUser;
 import cl.anpetrus.prueba3.validators.EventListValidator;
 import cl.anpetrus.prueba3.validators.MenuValidator;
 import cl.anpetrus.prueba3.views.drawers.PhotoUserCallback;
@@ -63,6 +65,7 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         TextView logoutTv = view.findViewById(R.id.logoutTv);
         logoutTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,8 +152,8 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
             String path = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Eventos", MagicalCamera.JPEG, true);
             Log.d("PATH", path);
             path = "file://" + path;
-            setPhoto(path);
-            new UploadPhoto(getContext()).toFirebase(path);
+            //setPhoto(path);
+            new UploadAvatarUser(this).uploadPhotoAvatar(path);
         }
     }
 
@@ -180,8 +183,15 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
         setPhoto(url);
     }
 
-    private void setPhoto(String url) {
+    @Override
+    public void photoUpload(String url) {
+        setPhoto(url);
+        Toast.makeText(getContext(), "Avatar actualizado", Toast.LENGTH_SHORT).show();
+    }
 
+    private void setPhoto(String url) {
+        Picasso.with(getContext()).invalidate(url);
+        Picasso.with(getContext()).load(url).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE);
         Picasso.with(getContext())
                 .load(url)
                 .centerCrop()

@@ -4,12 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -21,8 +22,9 @@ import cl.anpetrus.prueba3.data.MyDate;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.validators.EventValidator;
 import cl.anpetrus.prueba3.views.main.ImageActivity;
+import cl.anpetrus.prueba3.views.main.LoadingFragment;
 
-public class EventActivity extends AppCompatActivity implements EventCallback{
+public class EventActivity extends AppCompatActivity implements EventCallback {
 
     public final static String KEY_EVENT = "cl.anpetrus.prueba3.views.events.EventActivity.KEY_EVENT";
 
@@ -30,45 +32,39 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
 
     private ImageView image;
     private String imageUrl;
-    private TextView name,description,dateStart, timeStart;
+    private TextView name, description, dateStart, timeStart;
 
     private AppBarLayout appBar;
 
     private FloatingActionButton editFab;
 
-    boolean imageZoom;
     private String keyEvent;
+    private LoadingFragment loadingFragment;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_event);
-       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-       // setSupportActionBar(toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-       // getSupportActionBar().hide();
-
+        loadingShow();
         editFab = (FloatingActionButton) findViewById(R.id.editFab);
         editFab.setVisibility(View.GONE);
 
         editFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(EventActivity.this,ActionEventActivity.class);
+                Intent intent = new Intent(EventActivity.this, ActionEventActivity.class);
                 intent.putExtra(ActionEventActivity.KEY_EVENT, keyEvent);
-                intent.putExtra(ActionEventActivity.ID_ACTION,ActionEventActivity.ID_ACTION_UPDATE);
+                intent.putExtra(ActionEventActivity.ID_ACTION, ActionEventActivity.ID_ACTION_UPDATE);
                 startActivity(intent);
             }
         });
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         image = (ImageView) findViewById(R.id.detailImageIv);
         name = (TextView) findViewById(R.id.detailNameTv);
@@ -78,8 +74,8 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
 
         validator = new EventValidator(this);
 
-       // String key = getIntent().getStringExtra(KEY_EVENT);
-       // validator.loadEvent(key);
+        // String key = getIntent().getStringExtra(KEY_EVENT);
+        // validator.loadEvent(key);
 
         appBar = (AppBarLayout) findViewById(R.id.app_bar);
 
@@ -88,7 +84,7 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
             public void onClick(View view) {
 
                 Intent intent = new Intent(EventActivity.this, ImageActivity.class);
-                intent.putExtra(ImageActivity.KEY_URL,imageUrl);
+                intent.putExtra(ImageActivity.KEY_URL, imageUrl);
                 startActivity(intent);
                 /*
                 if(imageZoom) {
@@ -128,7 +124,17 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
         super.onResume();
         String key = getIntent().getStringExtra(KEY_EVENT);
         validator.loadEvent(key);
-        Toast.makeText(this, "HHH", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        image.setImageBitmap(null);
+        name.setText("");
+        description.setText("");
+        dateStart.setText("");
+        timeStart.setText("");
+        toolbar.setTitle("");
     }
 
     @Override
@@ -139,8 +145,12 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
                 //.fit()
                 .into(image);
 
+        String name = event.getName();
+        this.name.setText(name);
+        if (name.length() > 14)
+            name = name.substring(0, 13) + "...";
 
-        name.setText(event.getName());
+        getSupportActionBar().setTitle(name);
         description.setText(event.getDescription());
         keyEvent = event.getKey();
         String dateString = new SimpleDateFormat("dd-MM-yyyy").format(MyDate.toDate(event.getStart()));
@@ -148,11 +158,28 @@ public class EventActivity extends AppCompatActivity implements EventCallback{
         dateStart.setText(dateString);
         timeStart.setText(timeString);
 
+        loadingDismiss();
+
     }
 
 
     @Override
     public void showEdit() {
         editFab.setVisibility(View.VISIBLE);
+    }
+
+    private void loadingShow() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("loading");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        loadingFragment = LoadingFragment.newInstance();
+        loadingFragment.show(ft, "loading");
+    }
+
+    private void loadingDismiss() {
+        loadingFragment.dismiss();
     }
 }

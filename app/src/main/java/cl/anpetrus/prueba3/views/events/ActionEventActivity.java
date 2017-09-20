@@ -48,8 +48,7 @@ import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.MyDate;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
-import cl.anpetrus.prueba3.services.UploadPhoto;
-import cl.anpetrus.prueba3.services.UserService;
+import cl.anpetrus.prueba3.services.UploadImageEvent;
 import cl.anpetrus.prueba3.validators.ActionEventValidator;
 import cl.anpetrus.prueba3.views.main.LoadingFragment;
 
@@ -320,8 +319,8 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                 Bitmap photo = magicalCamera.getPhoto();
                 Bitmap photoThumbs;
 
-                photoThumbs = UploadPhoto.getResizedBitmap(photo, 380);
-                photo = UploadPhoto.getResizedBitmap(photo, 800);
+                photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
+                photo = UploadImageEvent.getResizedBitmap(photo, 800);
 
 
                 pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
@@ -330,14 +329,14 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                 // magicalCamera.setResizePhoto(20);
                 //  Bitmap photoThumbs = magicalCamera.getPhoto();
 
-                // photoThumbs = UploadPhoto.getResizedBitmap(photo,200);
+                // photoThumbs = UploadImageEvent.getResizedBitmap(photo,200);
                 pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photoThumbs, "Imagen", "EventosThumbs", MagicalCamera.JPEG, true);
                 pathPhotoThumbails = "file://" + pathPhotoThumbails;
 
                 setPhoto(pathPhoto);
                 withNewPhoto = true;
 
-                // new UploadPhoto(this).toFirebase(path, "");
+                // new UploadImageEvent(this).uploadSave(path, "");
             } else {
                 // requestPhoto();
                 // error con camara
@@ -354,11 +353,11 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     }
 
     private void setPhoto(String url) {
-        DisplayMetrics metrics = new DisplayMetrics();
+        /*DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels; // ancho absoluto en pixels
-        int height = metrics.heightPixels;
-        imageIv.setMaxWidth(width);
+        int height = metrics.heightPixels;*/
+
         Picasso.with(this)
                 .load(url)
                 .error(R.mipmap.ic_insert_photo_white_36dp)
@@ -432,16 +431,16 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     @Override
     public void updateEvent(boolean withNewPhoto) {
         //pathPhoto = imageUri;
-        new UserService().saveCurrentUser();
+
         Log.d("XXX", imageUri);
-        new UploadPhoto(ActionEventActivity.this).toFirebaseUpdate(imageUri, pathPhotoThumbails, eventMaster, withNewPhoto);
+        new UploadImageEvent(ActionEventActivity.this).uploadUpdate(imageUri, pathPhotoThumbails, eventMaster, withNewPhoto);
         Toast.makeText(this, "Actualizando Evento", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void saveEvent() {
-        new UserService().saveCurrentUser();
-        new UploadPhoto(ActionEventActivity.this).toFirebase(pathPhoto, pathPhotoThumbails, eventMaster);
+
+        new UploadImageEvent(ActionEventActivity.this).uploadSave(pathPhoto, pathPhotoThumbails, eventMaster);
 
         Toast.makeText(this, "Agregando Evento", Toast.LENGTH_SHORT).show();
 
