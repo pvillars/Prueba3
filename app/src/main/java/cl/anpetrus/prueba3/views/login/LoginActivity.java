@@ -26,7 +26,6 @@ public class LoginActivity extends AppCompatActivity  implements LoginCallBack{
 
         setContentView(R.layout.activity_login);
 
-
         new LoginValidator(this).init();
 
     }

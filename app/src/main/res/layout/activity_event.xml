@@ -30,6 +30,13 @@
                 android:scaleType="centerCrop"
                 android:src="@mipmap/choose_image" />
 
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/shadow_image_event"
+                android:layout_above="@+id/nameListTv"
+                android:layout_alignParentStart="true" />
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
