@@ -30,7 +30,7 @@ public class UploadImageEvent {
     private ActionEventCallback callback;
     private StorageReference storageReference;
 
-    public UploadImageEvent(Context context) {
+    public  UploadImageEvent(Context context) {
         this.callback = (ActionEventCallback)context;
     }
 
@@ -153,7 +153,7 @@ public class UploadImageEvent {
         return resizedBitmap;
     }
 
-    public Bitmap getBitmap(String path) {
+    public static Bitmap getBitmap(String path) {
         try {
             Bitmap bitmap = null;
             File f = new File(path);
@@ -167,5 +167,12 @@ public class UploadImageEvent {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public static Bitmap RotateBitmap(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);
     }
 }

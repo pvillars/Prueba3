@@ -51,6 +51,13 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
         loadingShow();
         editFab = (FloatingActionButton) findViewById(R.id.editFab);
         editFab.setVisibility(View.GONE);

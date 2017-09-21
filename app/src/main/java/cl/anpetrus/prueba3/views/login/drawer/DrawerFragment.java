@@ -50,6 +50,7 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
     private CircularImageView avatar;
 
     private int PHOTO_SIZE = 30;
+    private TextView takeAvatarTv;
 
     public DrawerFragment() {
         // Required empty public constructor
@@ -84,7 +85,8 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
         });
 
 
-        view.findViewById(R.id.takeAvatarTv).setOnClickListener(new View.OnClickListener() {
+        takeAvatarTv = view.findViewById(R.id.takeAvatarTv);
+        takeAvatarTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 magicalCamera.takeFragmentPhoto(DrawerFragment.this);
@@ -147,7 +149,9 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
         magicalCamera.resultPhoto(requestCode, resultCode, data);
 
         if (RESULT_OK == resultCode) {
-            Toast.makeText(getContext(), "OKA", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Cargando foto", Toast.LENGTH_SHORT).show();
+            takeAvatarTv.setText("Cargando...");
+            takeAvatarTv.setClickable(false);
             Bitmap photo = magicalCamera.getPhoto();
             String path = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Eventos", MagicalCamera.JPEG, true);
             Log.d("PATH", path);
@@ -187,6 +191,8 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
     public void photoUpload(String url) {
         setPhoto(url);
         Toast.makeText(getContext(), "Avatar actualizado", Toast.LENGTH_SHORT).show();
+        takeAvatarTv.setText("Cambiar foto");
+        takeAvatarTv.setClickable(true);
     }
 
     private void setPhoto(String url) {

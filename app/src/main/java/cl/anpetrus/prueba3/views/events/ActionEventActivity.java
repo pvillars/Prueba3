@@ -106,6 +106,15 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
         actionExtra = getIntent().getStringExtra(ID_ACTION);
 
+
+        Button rotateLeftBtn = (Button) findViewById(R.id.leftRotateBtn);
+        rotateLeftBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rotateLeft();
+            }
+        });
+
         Button saveUpdateBtn = (Button) findViewById(R.id.saveUpdateEventBtn);
         saveUpdateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -324,6 +333,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
 
                 pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
+
                 pathPhoto = "file://" + pathPhoto;
 
                 // magicalCamera.setResizePhoto(20);
@@ -382,6 +392,8 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             imageZoom = true;
         }
     }
+
+
 
     private void imageZoomIn() {
         ViewGroup.LayoutParams params = appBar.getLayoutParams();
@@ -495,4 +507,15 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             imageZoom = true;
         }
     }
+
+    private void rotateLeft(){
+        Toast.makeText(this, "HHHAJ", Toast.LENGTH_SHORT).show();
+
+        Bitmap photo = magicalCamera.rotatePicture(UploadImageEvent.getBitmap(pathPhoto),MagicalCamera.ORIENTATION_ROTATE_90);
+        pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
+
+        pathPhoto = "file://" + pathPhoto;
+         setPhoto(pathPhoto);
+    }
+
 }
