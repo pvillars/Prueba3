@@ -32,9 +32,10 @@ import com.frosquivel.magicalcamera.MagicalPermissions;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -83,6 +84,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     ActionEventValidator actionValidator;
     private LoadingFragment loadingFragment;
     private FloatingActionButton selectPhotoFab;
+    private Bitmap photo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,10 +109,11 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         actionExtra = getIntent().getStringExtra(ID_ACTION);
 
 
-        Button rotateLeftBtn = (Button) findViewById(R.id.leftRotateBtn);
+        Button rotateLeftBtn = (Button) findViewById(R.id.leftRotateBtnX);
         rotateLeftBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(ActionEventActivity.this, "TOAST", Toast.LENGTH_SHORT).show();
                 rotateLeft();
             }
         });
@@ -134,7 +137,9 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
                     pathPhoto = imageUri;
 
-                    actionValidator.saveOrUpdate(eventMaster, pathPhoto, actionExtra, withNewPhoto);
+                    //photo = imageIv.getDrawingCache();
+
+                    actionValidator.saveOrUpdate(eventMaster, photo, actionExtra, withNewPhoto);
 
 
                 } catch (ParseException e) {
@@ -325,28 +330,24 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
             if (RESULT_OK == resultCode) {
                 Toast.makeText(this, "OKA", Toast.LENGTH_SHORT).show();
-                Bitmap photo = magicalCamera.getPhoto();
-                Bitmap photoThumbs;
+                photo = magicalCamera.getPhoto();
 
-                photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
                 photo = UploadImageEvent.getResizedBitmap(photo, 800);
 
+                imageIv.setImageBitmap(photo);
 
-                pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
-
-                pathPhoto = "file://" + pathPhoto;
-
-                // magicalCamera.setResizePhoto(20);
-                //  Bitmap photoThumbs = magicalCamera.getPhoto();
-
-                // photoThumbs = UploadImageEvent.getResizedBitmap(photo,200);
-                pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photoThumbs, "Imagen", "EventosThumbs", MagicalCamera.JPEG, true);
-                pathPhotoThumbails = "file://" + pathPhotoThumbails;
-
-                setPhoto(pathPhoto);
                 withNewPhoto = true;
 
-                // new UploadImageEvent(this).uploadSave(path, "");
+                //pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
+
+                //pathPhoto = "file://" + pathPhoto;
+
+                //pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photoThumbs, "Imagen", "EventosThumbs", MagicalCamera.JPEG, true);
+                //pathPhotoThumbails = "file://" + pathPhotoThumbails;
+
+                //setPhoto(pathPhoto);
+
+
             } else {
                 // requestPhoto();
                 // error con camara
@@ -355,6 +356,14 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             Log.d("TAKEP", e.toString());
             Toast.makeText(this, "Error inesperado, favor intente nuevamente", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void savePhotos() {
+        Bitmap photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
+        pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
+        pathPhoto = "file://" + pathPhoto;
+        pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photoThumbs, "Imagen", "EventosThumbs", MagicalCamera.JPEG, true);
+        pathPhotoThumbails = "file://" + pathPhotoThumbails;
     }
 
 
@@ -367,7 +376,8 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
         int width = metrics.widthPixels; // ancho absoluto en pixels
         int height = metrics.heightPixels;*/
-
+        Picasso.with(this).invalidate(url);
+        Picasso.with(this).load(url).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE);
         Picasso.with(this)
                 .load(url)
                 .error(R.mipmap.ic_insert_photo_white_36dp)
@@ -379,6 +389,8 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         imageIv.setLayoutParams(params);
         imageUri = url;
+
+
 
     }
 
@@ -392,7 +404,6 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             imageZoom = true;
         }
     }
-
 
 
     private void imageZoomIn() {
@@ -445,28 +456,27 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         //pathPhoto = imageUri;
 
         Log.d("XXX", imageUri);
-        new UploadImageEvent(ActionEventActivity.this).uploadUpdate(imageUri, pathPhotoThumbails, eventMaster, withNewPhoto);
+        if(withNewPhoto) {
+            Bitmap photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
+            new UploadImageEvent(ActionEventActivity.this).uploadUpdate(photo, photoThumbs, eventMaster, withNewPhoto);
+        }else{
+            new UploadImageEvent(ActionEventActivity.this).uploadUpdate(null, null, eventMaster, withNewPhoto);
+        }
         Toast.makeText(this, "Actualizando Evento", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void saveEvent() {
+        Bitmap photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
 
-        new UploadImageEvent(ActionEventActivity.this).uploadSave(pathPhoto, pathPhotoThumbails, eventMaster);
+        new UploadImageEvent(ActionEventActivity.this).uploadSave(photo, photoThumbs, eventMaster);
 
         Toast.makeText(this, "Agregando Evento", Toast.LENGTH_SHORT).show();
 
     }
 
     @Override
-    public void loadFinished(boolean withPhoto) {
-        if (withPhoto) {
-            File photo = new File(pathPhoto);
-            photo.delete();
-            photo = new File(pathPhotoThumbails);
-            photo.delete();
-            photo = null;
-        }
+    public void loadFinished() {
         finish();
     }
 
@@ -508,14 +518,15 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         }
     }
 
-    private void rotateLeft(){
+    private void rotateLeft() {
         Toast.makeText(this, "HHHAJ", Toast.LENGTH_SHORT).show();
-
-        Bitmap photo = magicalCamera.rotatePicture(UploadImageEvent.getBitmap(pathPhoto),MagicalCamera.ORIENTATION_ROTATE_90);
-        pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
-
-        pathPhoto = "file://" + pathPhoto;
-         setPhoto(pathPhoto);
+        photo = magicalCamera.rotatePicture(photo, MagicalCamera.ORIENTATION_ROTATE_90);
+        imageIv.setImageBitmap(photo);
     }
 
+    private void rotateRight() {
+        Toast.makeText(this, "HHHAJ", Toast.LENGTH_SHORT).show();
+        photo = magicalCamera.rotatePicture(photo, MagicalCamera.ORIENTATION_ROTATE_270);
+        imageIv.setImageBitmap(photo);
+    }
 }

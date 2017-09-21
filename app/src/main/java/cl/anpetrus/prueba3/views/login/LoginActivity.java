@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity  implements LoginCallBack{
         if (RC_SIGN_IN == requestCode) {
             Toast.makeText(this, "resultCode "+resultCode, Toast.LENGTH_SHORT).show();
             if (ResultCodes.OK == resultCode) {
-                new UserService().saveCurrentUser(null);
+                new UserService().saveCurrentUser();
                 success();
             }
 
@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity  implements LoginCallBack{
 
     @Override
     public void singIn() {
-        Toast.makeText(this, "SIGNIN", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "SIGN IN", Toast.LENGTH_SHORT).show();
         startActivityForResult(
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()

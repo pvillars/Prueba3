@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -146,9 +148,12 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
 
     @Override
     public void loadEvent(Event event) {
-        imageUrl = event.getImage();
+
+        imageUrl = event.getImageThumbnail();
+        Picasso.with(this).invalidate(imageUrl);
+        Picasso.with(this).load(imageUrl).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE);
         Picasso.with(this)
-                .load(event.getImageThumbnail())
+                .load(imageUrl)
                 //.fit()
                 .into(image);
 

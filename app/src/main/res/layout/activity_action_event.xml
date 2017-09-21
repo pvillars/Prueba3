@@ -20,11 +20,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary">
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="90"
-                android:id="@+id/leftRotateBtn"/>
+
 
             <ImageView
                 android:id="@+id/imageIv"
@@ -32,6 +28,12 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:src="@mipmap/choose_image" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="90"
+                android:layout_gravity="center"
+                android:id="@+id/leftRotateBtnX"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

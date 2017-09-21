@@ -1,5 +1,7 @@
 package cl.anpetrus.prueba3.validators;
 
+import android.graphics.Bitmap;
+
 import java.util.Date;
 
 import cl.anpetrus.prueba3.callbacks.ActionEventCallback;
@@ -20,27 +22,32 @@ public class ActionEventValidator {
         this.callback = callback;
     }
 
-    public void saveOrUpdate(Event event,String imageUri, String action,boolean withNewPhoto){
+    public void saveOrUpdate(Event event, Bitmap photo, String action, boolean withNewPhoto) {
 
-        if (isValidData(event,imageUri)) {
+        if (isValidData(event, photo, withNewPhoto)) {
             if (action.equals(ActionEventActivity.ID_ACTION_NEW)) {
                 callback.saveEvent();
             } else {
                 callback.updateEvent(withNewPhoto);
             }
-        }else{
+        } else {
             callback.errorMessage(errorMessage);
         }
     }
 
-    private boolean isValidData(Event event, String imageUri){
+
+    private boolean isValidData(Event event, Bitmap photo, boolean withNewPhoto) {
         if (event.getName().trim().length() > 0) {
             if (event.getDescription().trim().length() > 0) {
                 if (MyDate.toDate(event.getStart()).after(new Date())) {
-                    if (imageUri != null) {
+                    if (withNewPhoto) {
+                        if (photo != null) {
+                            return true;
+                        } else {
+                            errorMessage = "Favor agrega una imagen";
+                        }
+                    }else{
                         return true;
-                    } else {
-                        errorMessage = "Favor agrega una imagen";
                     }
                 } else {
                     errorMessage = "Favor ingresar fecha y hora posterior a la actual";
