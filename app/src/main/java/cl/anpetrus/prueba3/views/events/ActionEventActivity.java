@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -85,6 +86,10 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     private LoadingFragment loadingFragment;
     private FloatingActionButton selectPhotoFab;
     private Bitmap photo;
+    private BottomNavigationView rotateLeftBtn;
+    private BottomNavigationView rotateRightBtn;
+    private BottomNavigationView rotateLeftShadowBtn;
+    private BottomNavigationView rotateRightShadowBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,13 +113,21 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
         actionExtra = getIntent().getStringExtra(ID_ACTION);
 
-
-        Button rotateLeftBtn = (Button) findViewById(R.id.leftRotateBtnX);
+        rotateLeftShadowBtn= (BottomNavigationView) findViewById(R.id.leftRotateBtnXShadow);
+        rotateLeftBtn = (BottomNavigationView) findViewById(R.id.leftRotateBtnX);
         rotateLeftBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(ActionEventActivity.this, "TOAST", Toast.LENGTH_SHORT).show();
                 rotateLeft();
+            }
+        });
+
+        rotateRightShadowBtn= (BottomNavigationView) findViewById(R.id.rightRotateBtnXShadow);
+        rotateRightBtn = (BottomNavigationView) findViewById(R.id.rightRotateBtnX);
+        rotateRightBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                rotateRight();
             }
         });
 
@@ -320,6 +333,13 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
     boolean withNewPhoto;
 
+    private void setVisivilityRotateBtns(int visivility){
+        rotateRightShadowBtn.setVisibility(visivility);
+        rotateLeftShadowBtn.setVisibility(visivility);
+        rotateLeftBtn.setVisibility(visivility);
+        rotateRightBtn.setVisibility(visivility);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -337,6 +357,8 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                 imageIv.setImageBitmap(photo);
 
                 withNewPhoto = true;
+
+                setVisivilityRotateBtns(View.VISIBLE);
 
                 //pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
 
@@ -407,6 +429,11 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
 
     private void imageZoomIn() {
+
+        if(photo!= null){
+            setVisivilityRotateBtns(View.VISIBLE);
+        }
+
         ViewGroup.LayoutParams params = appBar.getLayoutParams();
         params.height = LinearLayout.LayoutParams.MATCH_PARENT;
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -423,6 +450,8 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     }
 
     private void imageZoomOut() {
+        setVisivilityRotateBtns(View.GONE);
+
         photoFab.animate().rotation(0).setDuration(400).start();
         galleryFab.animate().rotation(0).setDuration(400).start();
         photoFab.animate().translationY(-getPixels(16)).setDuration(400).start();
@@ -519,14 +548,12 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     }
 
     private void rotateLeft() {
-        Toast.makeText(this, "HHHAJ", Toast.LENGTH_SHORT).show();
-        photo = magicalCamera.rotatePicture(photo, MagicalCamera.ORIENTATION_ROTATE_90);
+        photo = magicalCamera.rotatePicture(photo, MagicalCamera.ORIENTATION_ROTATE_270);
         imageIv.setImageBitmap(photo);
     }
 
     private void rotateRight() {
-        Toast.makeText(this, "HHHAJ", Toast.LENGTH_SHORT).show();
-        photo = magicalCamera.rotatePicture(photo, MagicalCamera.ORIENTATION_ROTATE_270);
+        photo = magicalCamera.rotatePicture(photo, MagicalCamera.ORIENTATION_ROTATE_90);
         imageIv.setImageBitmap(photo);
     }
 }

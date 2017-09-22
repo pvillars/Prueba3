@@ -1,11 +1,13 @@
 package cl.anpetrus.prueba3.services;
 
-import android.net.Uri;
+import android.graphics.Bitmap;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.data.EmailProcessor;
@@ -27,7 +29,7 @@ public class UploadAvatarUser {
     }
 
 
-    public void uploadPhotoAvatar(String path){
+    public void uploadPhotoAvatar(Bitmap photo){
 
         final CurrentUser currentUser = new CurrentUser();
         String folder = new EmailProcessor().sanitizedEmail(currentUser.email())+"/";
@@ -37,7 +39,11 @@ public class UploadAvatarUser {
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
 
-        storageReference.putFile(Uri.parse(path)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        photo.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        storageReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 @SuppressWarnings("VisibleForTests")

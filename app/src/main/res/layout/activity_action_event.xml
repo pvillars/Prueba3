@@ -22,25 +22,20 @@
             app:contentScrim="?attr/colorPrimary">
 
 
-            <ImageView
-                android:id="@+id/imageIv"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:src="@mipmap/choose_image" />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="90"
-                android:layout_gravity="center"
-                android:id="@+id/leftRotateBtnX"/>
-
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+            <ImageView
+                android:id="@+id/imageIv"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@mipmap/choose_image" />
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
@@ -78,6 +73,55 @@
         app:srcCompat="@mipmap/ic_insert_photo_white_36dp" />
 
 
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/leftRotateBtnXShadow"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="32dp"
+        android:visibility="gone"
+        android:layout_marginRight="80dp"
+        app:layout_anchor="@+id/app_bar"
+        app:layout_anchorGravity="top|right"
+        android:background="@drawable/shadow_bottom" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/leftRotateBtnX"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="32dp"
+        android:visibility="gone"
+        android:layout_marginRight="80dp"
+        app:layout_anchor="@+id/app_bar"
+        app:layout_anchorGravity="top|right"
+        android:background="@mipmap/ic_rotate_left_white_24dp" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/rightRotateBtnXShadow"
+        android:visibility="gone"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="16dp"
+        app:layout_anchor="@+id/app_bar"
+        app:layout_anchorGravity="top|right"
+        android:background="@drawable/shadow_bottom"
+        />
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/rightRotateBtnX"
+        android:visibility="gone"
+        android:layout_width="55dp"
+        android:layout_height="55dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginRight="16dp"
+        app:layout_anchor="@+id/app_bar"
+        app:layout_anchorGravity="top|right"
+        android:background="@mipmap/ic_rotate_right_white_24dp"
+        />
+
+
+
+
+
     <!--<ProgressBar
         android:id="@+id/loadingBar"
         android:layout_width="match_parent"
@@ -85,7 +129,6 @@
         android:layout_gravity="center"
 
         />-->
-
 
 
 </android.support.design.widget.CoordinatorLayout>

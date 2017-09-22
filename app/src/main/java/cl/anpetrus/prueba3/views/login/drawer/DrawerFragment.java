@@ -153,11 +153,11 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
             takeAvatarTv.setText("Cargando...");
             takeAvatarTv.setClickable(false);
             Bitmap photo = magicalCamera.getPhoto();
-            String path = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Eventos", MagicalCamera.JPEG, true);
-            Log.d("PATH", path);
-            path = "file://" + path;
+            //String path = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Eventos", MagicalCamera.JPEG, true);
+           // Log.d("PATH", path);
+            //path = "file://" + path;
             //setPhoto(path);
-            new UploadAvatarUser(this).uploadPhotoAvatar(path);
+            new UploadAvatarUser(this).uploadPhotoAvatar(photo);
         }
     }
 
