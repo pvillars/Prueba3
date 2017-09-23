@@ -31,6 +31,7 @@ import java.util.Map;
 import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.services.UploadAvatarUser;
+import cl.anpetrus.prueba3.services.UploadImageEvent;
 import cl.anpetrus.prueba3.validators.EventListValidator;
 import cl.anpetrus.prueba3.validators.MenuValidator;
 import cl.anpetrus.prueba3.views.drawers.PhotoUserCallback;
@@ -153,6 +154,8 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
             takeAvatarTv.setText("Cargando...");
             takeAvatarTv.setClickable(false);
             Bitmap photo = magicalCamera.getPhoto();
+
+            photo = UploadImageEvent.getResizedBitmap(photo,250);
             //String path = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Eventos", MagicalCamera.JPEG, true);
            // Log.d("PATH", path);
             //path = "file://" + path;

@@ -5,7 +5,7 @@ package cl.anpetrus.prueba3.listeners;
  */
 
 public interface EventListener {
-    void clicked(String keyEvent);
+    void clicked(String keyEvent, String name);
     void dataChange();
     void showSoonEvents();
     void showMyEvents();

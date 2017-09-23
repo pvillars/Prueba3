@@ -29,6 +29,7 @@ import cl.anpetrus.prueba3.views.main.LoadingFragment;
 public class EventActivity extends AppCompatActivity implements EventCallback {
 
     public final static String KEY_EVENT = "cl.anpetrus.prueba3.views.events.EventActivity.KEY_EVENT";
+    public final static String KEY_NAME = "cl.anpetrus.prueba3.views.events.EventActivity.KEY_NAME";
 
     private EventValidator validator;
 
@@ -52,6 +53,9 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        String nameAb = getIntent().getStringExtra(KEY_NAME);
+        getSupportActionBar().setTitle(nameAb);
 
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,12 +125,6 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
 
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
-    }
 
     @Override
     protected void onResume() {

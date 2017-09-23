@@ -53,10 +53,11 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event, EventsAdapter.
                 // .fit()
                 .into(viewHolder.image);
 
+        final String finalName = name;
         viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                listener.clicked(model.getKey());
+                listener.clicked(model.getKey(), finalName);
             }
         });
 

@@ -161,16 +161,15 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                 }
             }
         });
-
+        getSupportActionBar().setTitle("");
         if (actionExtra.equals(ID_ACTION_NEW)) {
-            getSupportActionBar().setTitle("Nuevo Evento");
+
             saveUpdateBtn.setText("AGREGAR");
             dateString = new SimpleDateFormat("dd-MM-yyyy").format(date);
             timeString = new SimpleDateFormat("HH:mm:ss").format(date);
             dateStartEt.setText(dateString);
             timeStartEt.setText(timeString);
         } else if (actionExtra.equals(ID_ACTION_UPDATE)) {
-            getSupportActionBar().setTitle("Actualizar Evento");
             imageIv.setScaleType(ImageView.ScaleType.CENTER_CROP);
             String keyEvent = getIntent().getStringExtra(KEY_EVENT);
             saveUpdateBtn.setText("ACTUALIZAR");

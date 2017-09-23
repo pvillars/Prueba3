@@ -118,17 +118,4 @@
         android:background="@mipmap/ic_rotate_right_white_24dp"
         />
 
-
-
-
-
-    <!--<ProgressBar
-        android:id="@+id/loadingBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-
-        />-->
-
-
 </android.support.design.widget.CoordinatorLayout>

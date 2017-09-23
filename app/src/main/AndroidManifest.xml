@@ -37,7 +37,10 @@
             android:name=".views.events.EventActivity"
             android:label="@string/title_activity_event"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".views.main.ImageActivity" />
+        <activity
+            android:name=".views.main.ImageActivity"
+            android:label="@string/title_activity_main22"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

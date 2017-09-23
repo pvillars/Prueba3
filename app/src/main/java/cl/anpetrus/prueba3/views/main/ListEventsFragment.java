@@ -77,10 +77,11 @@ public class ListEventsFragment extends Fragment implements EventListener {
     }
 
     @Override
-    public void clicked(String keyEvent) {
+    public void clicked(String keyEvent, String name) {
 
         Intent intent = new Intent(getContext(), EventActivity.class);
         intent.putExtra(EventActivity.KEY_EVENT, keyEvent);
+        intent.putExtra(EventActivity.KEY_NAME, name);
         startActivity(intent);
 
     }
