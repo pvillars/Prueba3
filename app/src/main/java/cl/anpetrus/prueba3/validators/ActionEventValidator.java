@@ -23,7 +23,6 @@ public class ActionEventValidator {
     }
 
     public void saveOrUpdate(Event event, Bitmap photo, String action, boolean withNewPhoto) {
-
         if (isValidData(event, photo, withNewPhoto)) {
             if (action.equals(ActionEventActivity.ID_ACTION_NEW)) {
                 callback.saveEvent();
@@ -35,7 +34,6 @@ public class ActionEventValidator {
         }
     }
 
-
     private boolean isValidData(Event event, Bitmap photo, boolean withNewPhoto) {
         if (event.getName().trim().length() > 0) {
             if (event.getDescription().trim().length() > 0) {
@@ -46,7 +44,7 @@ public class ActionEventValidator {
                         } else {
                             errorMessage = "Favor agrega una imagen";
                         }
-                    }else{
+                    } else {
                         return true;
                     }
                 } else {

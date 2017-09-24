@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity implements MenuCallback {
     static MainActivity mainActivity;
     private DrawerLayout drawer;
 
-    public static MainActivity getThis(){
+    public static MainActivity getThis() {
         return mainActivity;
     }
 
@@ -30,13 +30,12 @@ public class MainActivity extends AppCompatActivity implements MenuCallback {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.actionsFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ActionEventActivity.class);
-                intent.putExtra(ActionEventActivity.ID_ACTION,ActionEventActivity.ID_ACTION_NEW);
+                intent.putExtra(ActionEventActivity.ID_ACTION, ActionEventActivity.ID_ACTION_NEW);
                 startActivity(intent);
             }
         });
@@ -52,7 +51,6 @@ public class MainActivity extends AppCompatActivity implements MenuCallback {
 
     @Override
     public void onBackPressed() {
-        //DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -62,7 +60,7 @@ public class MainActivity extends AppCompatActivity implements MenuCallback {
 
     @Override
     public void closeMenu() {
-         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         }

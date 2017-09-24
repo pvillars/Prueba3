@@ -15,9 +15,7 @@
         android:background="@drawable/side_nav_bar"
         android:scaleType="centerCrop"
         android:src="@mipmap/choose_image"
-
         />
-
 
     <ImageView
         android:layout_width="match_parent"
@@ -63,8 +61,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/dateStartListTv"
-        android:layout_margin="4dp"
         android:layout_alignParentEnd="true"
+        android:layout_margin="4dp"
         android:text="s@@@@@@@@@@@s"
         android:textColor="@android:color/white" />
 

@@ -77,45 +77,44 @@
         android:id="@+id/leftRotateBtnXShadow"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginTop="32dp"
-        android:visibility="gone"
         android:layout_marginRight="80dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/shadow_bottom"
+        android:visibility="gone"
         app:layout_anchor="@+id/app_bar"
-        app:layout_anchorGravity="top|right"
-        android:background="@drawable/shadow_bottom" />
+        app:layout_anchorGravity="top|right" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/leftRotateBtnX"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginTop="32dp"
-        android:visibility="gone"
         android:layout_marginRight="80dp"
+        android:layout_marginTop="32dp"
+        android:background="@mipmap/ic_rotate_left_white_24dp"
+        android:visibility="gone"
         app:layout_anchor="@+id/app_bar"
-        app:layout_anchorGravity="top|right"
-        android:background="@mipmap/ic_rotate_left_white_24dp" />
+        app:layout_anchorGravity="top|right" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/rightRotateBtnXShadow"
-        android:visibility="gone"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginTop="32dp"
         android:layout_marginRight="16dp"
-        app:layout_anchor="@+id/app_bar"
-        app:layout_anchorGravity="top|right"
+        android:layout_marginTop="32dp"
         android:background="@drawable/shadow_bottom"
-        />
+        android:visibility="gone"
+        app:layout_anchor="@+id/app_bar"
+        app:layout_anchorGravity="top|right" />
+
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/rightRotateBtnX"
-        android:visibility="gone"
         android:layout_width="55dp"
         android:layout_height="55dp"
-        android:layout_marginTop="32dp"
         android:layout_marginRight="16dp"
-        app:layout_anchor="@+id/app_bar"
-        app:layout_anchorGravity="top|right"
+        android:layout_marginTop="32dp"
         android:background="@mipmap/ic_rotate_right_white_24dp"
-        />
+        android:visibility="gone"
+        app:layout_anchor="@+id/app_bar"
+        app:layout_anchorGravity="top|right" />
 
 </android.support.design.widget.CoordinatorLayout>

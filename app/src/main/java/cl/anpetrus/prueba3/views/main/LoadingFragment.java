@@ -24,8 +24,8 @@ public class LoadingFragment extends DialogFragment {
     public static LoadingFragment newInstance() {
         return new LoadingFragment();
     }
+
     public LoadingFragment() {
-        // Required empty public constructor
     }
 
     @NonNull
@@ -39,7 +39,6 @@ public class LoadingFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_loading, container, false);
     }
 
@@ -53,9 +52,7 @@ public class LoadingFragment extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
+
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
-
     }
-
-
 }

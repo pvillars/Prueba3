@@ -1,7 +1,5 @@
 package cl.anpetrus.prueba3.views.drawers;
 
-import android.content.Context;
-
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
@@ -17,21 +15,19 @@ import cl.anpetrus.prueba3.models.User;
 
 public class PhotoUserValidation {
 
-    private Context context;
     private PhotoUserCallback photoCallback;
 
-    public PhotoUserValidation(Context context, PhotoUserCallback photoCallback) {
-        this.context = context;
+    public PhotoUserValidation(PhotoUserCallback photoCallback) {
         this.photoCallback = photoCallback;
     }
 
     public void validate() {
         String key = EmailProcessor.sanitizedEmail(new CurrentUser().email());
 
-       new Nodes().user(key).addListenerForSingleValueEvent(new ValueEventListener() {
+        new Nodes().user(key).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     User user = dataSnapshot.getValue(User.class);
                     if (user.getPhoto() != null) {
                         photoCallback.photoAvailable(user.getPhoto());
@@ -43,10 +39,8 @@ public class PhotoUserValidation {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-
     }
+
 }

@@ -22,20 +22,18 @@ import cl.anpetrus.prueba3.views.drawers.PhotoUserCallback;
 public class UploadAvatarUser {
 
     private PhotoUserCallback callback;
-    private StorageReference storageReference;
 
     public UploadAvatarUser(PhotoUserCallback context) {
-        this.callback = (PhotoUserCallback)context;
+        this.callback = context;
     }
 
-
-    public void uploadPhotoAvatar(Bitmap photo){
+    public void uploadPhotoAvatar(Bitmap photo) {
 
         final CurrentUser currentUser = new CurrentUser();
-        String folder = new EmailProcessor().sanitizedEmail(currentUser.email())+"/";
+        String folder = new EmailProcessor().sanitizedEmail(currentUser.email()) + "/avatar/";
         String photoName = "avatar.jpg";
-        String baseUrl = "gs://prueba3-1df0c.appspot.com/users/avatar/";
-        String refUrl = baseUrl + folder +photoName;;
+        String baseUrl = "gs://prueba3-1df0c.appspot.com/users/";
+        String refUrl = baseUrl + folder + photoName;
 
         StorageReference storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
 
@@ -50,7 +48,6 @@ public class UploadAvatarUser {
                 String[] fullUrl = taskSnapshot.getDownloadUrl().toString().split("&token");
 
                 String url = fullUrl[0];
-
                 String key = new EmailProcessor().sanitizedEmail(currentUser.email());
 
                 User user = new User();
@@ -64,7 +61,5 @@ public class UploadAvatarUser {
             }
 
         });
-
     }
-
 }

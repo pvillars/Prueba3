@@ -5,7 +5,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import cl.anpetrus.prueba3.data.CurrentUser;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
 import cl.anpetrus.prueba3.models.User;
@@ -17,51 +16,26 @@ import cl.anpetrus.prueba3.models.User;
 public class EventService {
 
     private DatabaseReference reference;
-    private CurrentUser currentUser;
 
     public EventService() {
         reference = new Nodes().events();
-        currentUser = new CurrentUser();
     }
 
-
     public void saveEvent(Event event) {
-
         String key = reference.push().getKey();
-
-        saveOrUpdate(event,key);
-
+        saveOrUpdate(event, key);
     }
 
     public void updateEvent(Event event) {
         final String key = event.getKey();
-
-        saveOrUpdate(event,key);
-
-        /*new Nodes().event(key).setValue(event);
-
-        event.setDescription(null);
-        event.setImage(null);
-
-        new Nodes().user(event.getUidUser()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User user = dataSnapshot.getValue(User.class);
-                event.setNameUser(user.getName());
-                new Nodes().eventList(key).setValue(event);
-                new Nodes().myEventList(event.getUidUser(),key).setValue(event);
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-            }
-        });*/
+        saveOrUpdate(event, key);
     }
 
-    private void saveOrUpdate(final Event event, final String key){
+    private void saveOrUpdate(final Event event, final String key) {
 
         event.setName(event.getName().trim());
-        if(event.getNameUser()!=null)
-        event.setNameUser(event.getNameUser().trim());
+        if (event.getNameUser() != null)
+            event.setNameUser(event.getNameUser().trim());
         event.setDescription(event.getDescription().trim());
 
         event.setKey(key);
@@ -75,35 +49,19 @@ public class EventService {
                 User user = dataSnapshot.getValue(User.class);
                 event.setNameUser(user.getName());
                 new Nodes().eventList(key).setValue(event);
-                new Nodes().myEventList(event.getUidUser(),key).setValue(event);
+                new Nodes().myEventList(event.getUidUser(), key).setValue(event);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
             }
         });
     }
 
-    private Event cleanData(Event event){
+    private Event cleanData(Event event) {
         event.setName(event.getName().trim());
         event.setNameUser(event.getNameUser().trim());
         event.setDescription(event.getDescription().trim());
         return event;
-    }
-
-    public Event getEvent(String key){
-        final Event[] event = {new Event()};
-        new Nodes().event(key).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                event[0] = (Event) dataSnapshot.getValue(Event.class);
-            }
-
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        return event[0];
     }
 }

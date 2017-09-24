@@ -80,7 +80,6 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
     String dateString, timeString;
     Date date = new Date();
-    //ProgressBar progressBar;
 
     ActionEventValidator actionValidator;
     private LoadingFragment loadingFragment;
@@ -113,7 +112,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
         actionExtra = getIntent().getStringExtra(ID_ACTION);
 
-        rotateLeftShadowBtn= (BottomNavigationView) findViewById(R.id.leftRotateBtnXShadow);
+        rotateLeftShadowBtn = (BottomNavigationView) findViewById(R.id.leftRotateBtnXShadow);
         rotateLeftBtn = (BottomNavigationView) findViewById(R.id.leftRotateBtnX);
         rotateLeftBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,7 +121,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             }
         });
 
-        rotateRightShadowBtn= (BottomNavigationView) findViewById(R.id.rightRotateBtnXShadow);
+        rotateRightShadowBtn = (BottomNavigationView) findViewById(R.id.rightRotateBtnXShadow);
         rotateRightBtn = (BottomNavigationView) findViewById(R.id.rightRotateBtnX);
         rotateRightBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -332,7 +331,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
     boolean withNewPhoto;
 
-    private void setVisivilityRotateBtns(int visivility){
+    private void setVisivilityRotateBtns(int visivility) {
         rotateRightShadowBtn.setVisibility(visivility);
         rotateLeftShadowBtn.setVisibility(visivility);
         rotateLeftBtn.setVisibility(visivility);
@@ -359,27 +358,16 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
                 setVisivilityRotateBtns(View.VISIBLE);
 
-                //pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
-
-                //pathPhoto = "file://" + pathPhoto;
-
-                //pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photoThumbs, "Imagen", "EventosThumbs", MagicalCamera.JPEG, true);
-                //pathPhotoThumbails = "file://" + pathPhotoThumbails;
-
-                //setPhoto(pathPhoto);
-
-
             } else {
-                // requestPhoto();
-                // error con camara
+                Toast.makeText(this, "Favor intenta nuevamente", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
-            Log.d("TAKEP", e.toString());
+            Log.d("Exception", e.toString());
             Toast.makeText(this, "Error inesperado, favor intente nuevamente", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void savePhotos() {
+    private void savePhotosOnDevice() {
         Bitmap photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
         pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
         pathPhoto = "file://" + pathPhoto;
@@ -404,13 +392,11 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                 .error(R.mipmap.ic_insert_photo_white_36dp)
                 .placeholder(R.mipmap.ic_launcher_round)
                 .into(imageIv);
-        Log.d("IMAGE", url);
         ViewGroup.LayoutParams params = imageIv.getLayoutParams();
         params.height = LinearLayout.LayoutParams.MATCH_PARENT;
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         imageIv.setLayoutParams(params);
         imageUri = url;
-
 
 
     }
@@ -429,7 +415,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
     private void imageZoomIn() {
 
-        if(photo!= null){
+        if (photo != null) {
             setVisivilityRotateBtns(View.VISIBLE);
         }
 
@@ -481,20 +467,20 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
     @Override
     public void updateEvent(boolean withNewPhoto) {
-        //pathPhoto = imageUri;
 
-        Log.d("XXX", imageUri);
-        if(withNewPhoto) {
+        Toast.makeText(this, "Actualizando Evento", Toast.LENGTH_SHORT).show();
+        if (withNewPhoto) {
             Bitmap photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
             new UploadImageEvent(ActionEventActivity.this).uploadUpdate(photo, photoThumbs, eventMaster, withNewPhoto);
-        }else{
+        } else {
             new UploadImageEvent(ActionEventActivity.this).uploadUpdate(null, null, eventMaster, withNewPhoto);
         }
-        Toast.makeText(this, "Actualizando Evento", Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
     public void saveEvent() {
+
         Bitmap photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
 
         new UploadImageEvent(ActionEventActivity.this).uploadSave(photo, photoThumbs, eventMaster);
@@ -511,8 +497,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     @Override
     public void finish() {
         super.finish();
-        //loadingDismiss();
-        // Toast.makeText(this, "Evento Agregado", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Evento Agregado", Toast.LENGTH_SHORT).show();
     }
 
     @Override

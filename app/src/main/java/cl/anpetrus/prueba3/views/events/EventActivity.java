@@ -2,7 +2,6 @@ package cl.anpetrus.prueba3.views.events;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -32,15 +31,10 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
     public final static String KEY_NAME = "cl.anpetrus.prueba3.views.events.EventActivity.KEY_NAME";
 
     private EventValidator validator;
-
     private ImageView image;
     private String imageUrl;
     private TextView name, description, dateStart, timeStart;
-
-    private AppBarLayout appBar;
-
     private FloatingActionButton editFab;
-
     private String keyEvent;
     private LoadingFragment loadingFragment;
     private Toolbar toolbar;
@@ -87,44 +81,15 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
 
         validator = new EventValidator(this);
 
-        // String key = getIntent().getStringExtra(KEY_EVENT);
-        // validator.loadEvent(key);
-
-        appBar = (AppBarLayout) findViewById(R.id.app_bar);
-
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 Intent intent = new Intent(EventActivity.this, ImageActivity.class);
                 intent.putExtra(ImageActivity.KEY_URL, imageUrl);
                 startActivity(intent);
-                /*
-                if(imageZoom) {
-                    ViewGroup.LayoutParams params = appBar.getLayoutParams();
-                    params.height = LinearLayout.LayoutParams.MATCH_PARENT;
-                    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-                    appBar.setLayoutParams(params);
-                   // fabZoomFake.setImageResource(R.mipmap.ic_zoom_out_white_24dp);
-                    imageZoom=false;
-                }else{
-                    DisplayMetrics metrics = new DisplayMetrics();
-                    getWindowManager().getDefaultDisplay().getMetrics(metrics);
-                    int pixels = (int) (200 * metrics.density + 0.5f);
-                    ViewGroup.LayoutParams params = appBar.getLayoutParams();
-                    params.height = pixels;
-                    params.width = LinearLayout.LayoutParams.MATCH_PARENT;
-                    appBar.setLayoutParams(params);
-                    //image.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                    //fabZoomFake.setImageResource(R.mipmap.ic_zoom_in_white_24dp);
-                    imageZoom = true;
-                }*/
             }
         });
-
-
     }
-
 
     @Override
     protected void onResume() {
@@ -152,7 +117,6 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
         Picasso.with(this).load(imageUrl).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE);
         Picasso.with(this)
                 .load(imageUrl)
-                //.fit()
                 .into(image);
 
         String name = event.getName();
@@ -169,9 +133,7 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
         timeStart.setText(timeString);
 
         loadingDismiss();
-
     }
-
 
     @Override
     public void showEdit() {

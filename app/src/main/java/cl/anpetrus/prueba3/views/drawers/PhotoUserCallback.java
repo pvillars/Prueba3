@@ -5,7 +5,11 @@ package cl.anpetrus.prueba3.views.drawers;
  */
 
 public interface PhotoUserCallback {
+
     void emptyPhoto();
+
     void photoAvailable(String url);
+
     void photoUpload(String url);
+
 }

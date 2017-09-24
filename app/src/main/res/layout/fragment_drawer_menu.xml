@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="16dp"
-    android:paddingRight="8dp"
     android:paddingLeft="16dp"
+    android:paddingRight="8dp"
     tools:context="cl.anpetrus.prueba3.views.login.drawer.DrawerFragment">
 
     <com.github.siyamed.shapeimageview.CircularImageView
@@ -31,15 +31,16 @@
         android:textAlignment="center"
         android:textColor="@android:color/white"
         android:textSize="16sp" />
+
     <TextView
         android:id="@+id/takeAvatarTv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingRight="8dp"
-        android:clickable="true"
-        android:text="Cambiar Foto"
         android:layout_above="@+id/emailTv"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:clickable="true"
+        android:paddingRight="8dp"
+        android:text="Cambiar Foto" />
 
     <View
         android:id="@+id/viewLine"
@@ -50,28 +51,28 @@
         android:background="@android:color/white" />
 
     <TextView
-        android:layout_marginTop="16dp"
         android:id="@+id/soonEventsTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clickable="true"
-        android:textStyle="bold"
-        android:drawableLeft="@mipmap/ic_add_white_24dp"
-        android:textSize="16sp"
         android:layout_below="@+id/viewLine"
-        android:text="  Proximos Eventos" />
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        android:drawableLeft="@mipmap/ic_add_white_24dp"
+        android:text="  Proximos Eventos"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
-        android:textStyle="bold"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"
-        android:drawableLeft="@mipmap/ic_add_white_24dp"
         android:id="@+id/myEventsTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/soonEventsTv"
+        android:layout_marginTop="16dp"
         android:clickable="true"
-        android:text="  Mis Eventos" />
+        android:drawableLeft="@mipmap/ic_add_white_24dp"
+        android:text="  Mis Eventos"
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/logoutTv"

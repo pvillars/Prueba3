@@ -6,8 +6,8 @@ package cl.anpetrus.prueba3.data;
 
 public class EmailProcessor {
 
-    public static String sanitizedEmail(String email){
-        return email.replace("@","AT").replace(".","AT");
+    public static String sanitizedEmail(String email) {
+        return email.replace("@", "AT").replace(".", "AT");
     }
 
 }

@@ -43,10 +43,9 @@ public class MyDate {
             return formatter.parse(date);
         } catch (ParseException e) {
             e.printStackTrace();
-            Log.d("ParseException",e.toString());
+            Log.d("ParseException", e.toString());
             return null;
         }
-
     }
 
 }

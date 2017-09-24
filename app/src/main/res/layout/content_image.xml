@@ -4,17 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@android:color/black"
     tools:context="cl.anpetrus.prueba3.views.main.ImageActivity">
 
     <ImageView
+        android:id="@+id/imageBtn"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitCenter"
-        android:src="@mipmap/choose_image"
-        android:id="@+id/imageBtn"
-        />
+        android:src="@mipmap/choose_image" />
 
 </LinearLayout>

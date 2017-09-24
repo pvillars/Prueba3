@@ -7,6 +7,7 @@ import cl.anpetrus.prueba3.callbacks.MenuCallback;
  */
 
 public class MenuValidator {
+
     private MenuCallback callback;
 
     public MenuValidator(MenuCallback callback) {

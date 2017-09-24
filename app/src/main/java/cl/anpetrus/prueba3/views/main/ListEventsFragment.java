@@ -44,9 +44,7 @@ public class ListEventsFragment extends Fragment implements EventListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_list_events, container, false);
-
     }
 
     @Override
@@ -54,10 +52,9 @@ public class ListEventsFragment extends Fragment implements EventListener {
         super.onViewCreated(view, savedInstanceState);
 
         swipeRefreshLayout = view.findViewById(R.id.reloadSr);
-
         swipeRefreshLayout.setRefreshing(true);
 
-        recyclerView =  view.findViewById(R.id.eventsRv);
+        recyclerView = view.findViewById(R.id.eventsRv);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         //DividerItemDecoration dividerItemDecoration =new DividerItemDecoration(this,LinearLayoutManager.VERTICAL);
@@ -71,24 +68,21 @@ public class ListEventsFragment extends Fragment implements EventListener {
             @Override
             public void onRefresh() {
                 reloadEvents();
-                swipeRefreshLayout.setRefreshing(false);
             }
         });
     }
 
     @Override
     public void clicked(String keyEvent, String name) {
-
         Intent intent = new Intent(getContext(), EventActivity.class);
         intent.putExtra(EventActivity.KEY_EVENT, keyEvent);
         intent.putExtra(EventActivity.KEY_NAME, name);
         startActivity(intent);
-
     }
 
     @Override
     public void dataChange() {
-       // swipeRefreshLayout.setRefreshing(false);
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -100,12 +94,10 @@ public class ListEventsFragment extends Fragment implements EventListener {
                 .eventsList()
                 .orderByChild("start")
                 .startAt(new MyDate().toString());
-        adapter = new EventsAdapter(this, getContext(),dbR);
+        adapter = new EventsAdapter(this, getContext(), dbR);
 
         recyclerView.setAdapter(adapter);
         showEvents = ShowEvents.SOON;
-
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -116,12 +108,10 @@ public class ListEventsFragment extends Fragment implements EventListener {
         Query dbR = new Nodes()
                 .myEventList(EmailProcessor.sanitizedEmail(new CurrentUser().email()))
                 .orderByChild("start");
-
         adapter = new EventsAdapter(this, getContext(), dbR);
+
         recyclerView.setAdapter(adapter);
         showEvents = ShowEvents.MY;
-
-        swipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -134,10 +124,9 @@ public class ListEventsFragment extends Fragment implements EventListener {
     public void onResume() {
         super.onResume();
         reloadEvents();
-
     }
 
-    private void reloadEvents(){
+    private void reloadEvents() {
         switch (showEvents) {
             case MY:
                 showMyEvents();

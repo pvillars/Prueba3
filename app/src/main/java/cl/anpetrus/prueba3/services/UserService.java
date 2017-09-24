@@ -15,10 +15,10 @@ import cl.anpetrus.prueba3.models.User;
 
 public class UserService {
 
-    public UserService(){}
+    public UserService() {
+    }
 
     public void saveCurrentUser() {
-
         final CurrentUser currentUser = new CurrentUser();
         final String key = EmailProcessor.sanitizedEmail(currentUser.email());
 
@@ -26,43 +26,20 @@ public class UserService {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User user;
-                if(dataSnapshot.exists()){
+                if (dataSnapshot.exists()) {
                     user = dataSnapshot.getValue(User.class);
-                }else{
+                } else {
                     user = new User();
                 }
                 user.setEmail(currentUser.email());
                 user.setName(currentUser.getCurrentUser().getDisplayName());
                 user.setUid(key);
-
                 new Nodes().user(key).setValue(user);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
-
-
-
     }
-
-    public void userPhoto(String key){
-
-        new Nodes().user(key).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-    }
-
 }

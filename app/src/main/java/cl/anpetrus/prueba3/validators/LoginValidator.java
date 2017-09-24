@@ -9,13 +9,13 @@ import cl.anpetrus.prueba3.data.CurrentUser;
 
 public class LoginValidator {
 
-    LoginCallBack loginCallBack;
+    private LoginCallBack loginCallBack;
 
     public LoginValidator(LoginCallBack loginCallBack) {
         this.loginCallBack = loginCallBack;
     }
 
-    public void init(){
+    public void init() {
         if (new CurrentUser().getCurrentUser() != null) {
             loginCallBack.success();
         } else {
@@ -23,5 +23,3 @@ public class LoginValidator {
         }
     }
 }
-
-

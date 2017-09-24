@@ -22,25 +22,22 @@ public class EventValidator {
         this.callback = callback;
     }
 
-    public void loadEvent(String keyEvent){
+    public void loadEvent(String keyEvent) {
         new Nodes().event(keyEvent).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Event event = dataSnapshot.getValue(Event.class);
                 callback.loadEvent(event);
                 String uidEvent = event.getUidUser();
-                String uidCurrentUser =  EmailProcessor.sanitizedEmail(new CurrentUser().email());
-                if(uidEvent.equals(uidCurrentUser)){
+                String uidCurrentUser = EmailProcessor.sanitizedEmail(new CurrentUser().email());
+                if (uidEvent.equals(uidCurrentUser)) {
                     callback.showEdit();
                 }
-
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
-
     }
 }

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.util.Log;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -21,8 +20,6 @@ import cl.anpetrus.prueba3.data.EmailProcessor;
 import cl.anpetrus.prueba3.data.Nodes;
 import cl.anpetrus.prueba3.models.Event;
 
-import static android.R.attr.path;
-
 /**
  * Created by Petrus on 30-08-2017.
  */
@@ -31,15 +28,13 @@ public class UploadImageEvent {
 
     private ActionEventCallback callback;
     private StorageReference storageReference;
+    private String url;
 
-    public  UploadImageEvent(Context context) {
-        this.callback = (ActionEventCallback)context;
+    public UploadImageEvent(Context context) {
+        this.callback = (ActionEventCallback) context;
     }
 
-    String url;
-
-
-    public String uploadSave(final Bitmap photo, final Bitmap photoThumbs, final Event newEvent) {
+    public void uploadSave(final Bitmap photo, final Bitmap photoThumbs, final Event newEvent) {
 
         final CurrentUser currentUser = new CurrentUser();
         final String userUidEmail = EmailProcessor.sanitizedEmail(currentUser.email());
@@ -51,7 +46,6 @@ public class UploadImageEvent {
         String baseUrlThumbs = "gs://prueba3-1df0c.appspot.com/events_thumbs/";
         final String refUrl = baseUrl + folder + photoName;
         final String refUrlThumbs = baseUrlThumbs + folder + photoName;
-
 
         storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrl);
 
@@ -86,14 +80,11 @@ public class UploadImageEvent {
                 });
             }
         });
-        return url;
     }
 
-    public String uploadUpdate(final Bitmap photo, final Bitmap photoThumbs, final Event event, boolean  withNewPhoto){
+    public void uploadUpdate(final Bitmap photo, final Bitmap photoThumbs, final Event event, boolean withNewPhoto) {
 
-
-        if(withNewPhoto){
-            Log.d("XXX","if "+path);
+        if (withNewPhoto) {
             final String refUrl = event.getImage();
             final String refUrlThumbs = event.getImageThumbnail();
 
@@ -106,7 +97,6 @@ public class UploadImageEvent {
             storageReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
                     storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(refUrlThumbs);
 
                     ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -116,32 +106,28 @@ public class UploadImageEvent {
                     storageReference.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                            Log.d("XXX","if url "+url);
                             new EventService().updateEvent(event);
                             callback.loadFinished();
                         }
                     });
                 }
             });
-        }else{
-            Log.d("XXX","else "+path);
+        } else {
             new EventService().updateEvent(event);
             callback.loadFinished();
         }
-        return url;
     }
 
-    public static Bitmap getResizedBitmap(Bitmap bm, int newWidth){
+    public static Bitmap getResizedBitmap(Bitmap bm, int newWidth) {
         int width = bm.getWidth();
         int height = bm.getHeight();
 
-        float propor =  (float) width / newWidth;
+        float propor = (float) width / newWidth;
         float newHeight = (float) height / propor;
 
 
         float scaleWidth = ((float) newWidth) / width;
-        float scaleHeight =  newHeight / height;
+        float scaleHeight = newHeight / height;
 
         // CREATE A MATRIX FOR THE MANIPULATION
         Matrix matrix = new Matrix();
@@ -188,8 +174,7 @@ public class UploadImageEvent {
         }
     }
 
-    public static Bitmap RotateBitmap(Bitmap source, float angle)
-    {
+    public static Bitmap RotateBitmap(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix, true);

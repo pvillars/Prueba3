@@ -7,8 +7,11 @@ package cl.anpetrus.prueba3.callbacks;
 public interface ActionEventCallback {
 
     void updateEvent(boolean withNewPhoto);
+
     void saveEvent();
+
     void loadFinished();
+
     void errorMessage(String message);
 
 }

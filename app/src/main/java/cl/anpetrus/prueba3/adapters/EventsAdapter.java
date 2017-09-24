@@ -26,7 +26,6 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event, EventsAdapter.
     private EventListener listener;
     private Context context;
 
-
     public EventsAdapter(EventListener listener, Context context, Query reference) {
         super(Event.class, R.layout.list_item_event, EventHolder.class, reference);
         this.listener = listener;
@@ -35,12 +34,10 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event, EventsAdapter.
 
     @Override
     protected void populateViewHolder(final EventHolder viewHolder, final Event model, int position) {
-
         String name = model.getName();
-        if(name.length() > 21){
-            name = name.substring(0,17) + "...";
+        if (name.length() > 21) {
+            name = name.substring(0, 17) + "...";
         }
-
         viewHolder.name.setText(name);
         String dateString = new SimpleDateFormat("dd-MM-yyyy").format(MyDate.toDate(model.getStart()));
         String timeString = new SimpleDateFormat("HH:mm").format(MyDate.toDate(model.getStart())) + " Hrs";
@@ -50,7 +47,6 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event, EventsAdapter.
 
         Picasso.with(context)
                 .load(model.getImageThumbnail())
-                // .fit()
                 .into(viewHolder.image);
 
         final String finalName = name;
@@ -60,14 +56,17 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event, EventsAdapter.
                 listener.clicked(model.getKey(), finalName);
             }
         });
+    }
 
+    @Override
+    protected void onDataChanged() {
+        super.onDataChanged();
+        listener.dataChange();
     }
 
     static public class EventHolder extends RecyclerView.ViewHolder {
-
         ImageView image;
         TextView name, dateStart, timeStart, nameAuthor;
-
 
         public EventHolder(View itemView) {
             super(itemView);
@@ -76,8 +75,7 @@ public class EventsAdapter extends FirebaseRecyclerAdapter<Event, EventsAdapter.
             dateStart = itemView.findViewById(R.id.dateStartListTv);
             timeStart = itemView.findViewById(R.id.timeStartListTv);
             nameAuthor = itemView.findViewById(R.id.authorNameListTv);
-
-
         }
     }
+
 }

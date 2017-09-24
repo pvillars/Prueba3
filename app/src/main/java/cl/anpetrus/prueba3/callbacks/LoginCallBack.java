@@ -5,6 +5,9 @@ package cl.anpetrus.prueba3.callbacks;
  */
 
 public interface LoginCallBack {
+
     void success();
+
     void singIn();
+
 }

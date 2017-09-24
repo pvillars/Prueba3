@@ -5,7 +5,8 @@ package cl.anpetrus.prueba3.models;
  */
 
 public class User {
-    private String name,email,photo,uid;
+
+    private String name, email, photo, uid;
 
     public User() {
     }

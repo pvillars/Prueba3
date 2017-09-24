@@ -54,13 +54,11 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
     private TextView takeAvatarTv;
 
     public DrawerFragment() {
-        // Required empty public constructor
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(fragment_drawer_menu, container, false);
     }
 
@@ -76,7 +74,6 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
                         .signOut(getActivity())
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             public void onComplete(@NonNull Task<Void> task) {
-                                // user is now signed out
                                 Intent intent = new Intent(getActivity(), LoginActivity.class);
                                 startActivity(intent);
                                 getActivity().finish();
@@ -126,7 +123,7 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
 
         avatar = view.findViewById(R.id.avatarCi);
 
-        new PhotoUserValidation(getContext(), this).validate();
+        new PhotoUserValidation(this).validate();
     }
 
     private void closeMenu() {
@@ -146,7 +143,7 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //CALL THIS METHOD EVER
+
         magicalCamera.resultPhoto(requestCode, resultCode, data);
 
         if (RESULT_OK == resultCode) {
@@ -155,11 +152,8 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
             takeAvatarTv.setClickable(false);
             Bitmap photo = magicalCamera.getPhoto();
 
-            photo = UploadImageEvent.getResizedBitmap(photo,250);
-            //String path = magicalCamera.savePhotoInMemoryDevice(photo, "Avatar", "Eventos", MagicalCamera.JPEG, true);
-           // Log.d("PATH", path);
-            //path = "file://" + path;
-            //setPhoto(path);
+            photo = UploadImageEvent.getResizedBitmap(photo, 250);
+
             new UploadAvatarUser(this).uploadPhotoAvatar(photo);
         }
     }
@@ -205,7 +199,6 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
                 .load(url)
                 .centerCrop()
                 .fit()
-                .placeholder(R.mipmap.choose_image)
                 .into(avatar);
     }
 }

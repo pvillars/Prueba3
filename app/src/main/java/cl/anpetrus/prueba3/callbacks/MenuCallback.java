@@ -5,5 +5,7 @@ package cl.anpetrus.prueba3.callbacks;
  */
 
 public interface MenuCallback {
+
     void closeMenu();
+
 }
