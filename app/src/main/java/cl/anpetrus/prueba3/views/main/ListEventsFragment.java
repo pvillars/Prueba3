@@ -31,6 +31,7 @@ public class ListEventsFragment extends Fragment implements EventListener {
     private EventsAdapter adapter;
     private ShowEvents showEvents;
     private SwipeRefreshLayout swipeRefreshLayout;
+  //  private boolean pendingRequest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,9 +61,30 @@ public class ListEventsFragment extends Fragment implements EventListener {
         //DividerItemDecoration dividerItemDecoration =new DividerItemDecoration(this,LinearLayoutManager.VERTICAL);
         //dividerItemDecoration.setDrawable(...);
         recyclerView.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         showEvents = ShowEvents.SOON;
         fragment = this;
+
+        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int position = linearLayoutManager.findLastVisibleItemPosition();
+                int total = linearLayoutManager.getItemCount();
+
+                //condition to know if is near the last item
+                if (total - 10 < position) {
+                    //pendingRequest is a field boolean to prevent double queries while there is one still executing
+
+                    if (!pendingRequest) {
+                        //Change the field boolean to prevent double requests
+                        pendingRequest = true;
+                        //TODO request whatever you want
+                    }
+                }
+
+            }
+        });*/
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -108,6 +130,7 @@ public class ListEventsFragment extends Fragment implements EventListener {
         Query dbR = new Nodes()
                 .myEventList(EmailProcessor.sanitizedEmail(new CurrentUser().email()))
                 .orderByChild("start");
+
         adapter = new EventsAdapter(this, getContext(), dbR);
 
         recyclerView.setAdapter(adapter);

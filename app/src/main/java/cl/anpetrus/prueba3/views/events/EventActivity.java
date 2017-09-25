@@ -1,6 +1,7 @@
 package cl.anpetrus.prueba3.views.events;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -21,8 +22,8 @@ import cl.anpetrus.prueba3.R;
 import cl.anpetrus.prueba3.callbacks.EventCallback;
 import cl.anpetrus.prueba3.data.MyDate;
 import cl.anpetrus.prueba3.models.Event;
+import cl.anpetrus.prueba3.services.UploadImageEvent;
 import cl.anpetrus.prueba3.validators.EventValidator;
-import cl.anpetrus.prueba3.views.main.ImageActivity;
 import cl.anpetrus.prueba3.views.main.LoadingFragment;
 
 public class EventActivity extends AppCompatActivity implements EventCallback {
@@ -32,12 +33,13 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
 
     private EventValidator validator;
     private ImageView image;
-    private String imageUrl;
+    private String imageUrlThums;
     private TextView name, description, dateStart, timeStart;
     private FloatingActionButton editFab;
     private String keyEvent;
     private LoadingFragment loadingFragment;
     private Toolbar toolbar;
+    private String imageUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +86,18 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(EventActivity.this, ImageActivity.class);
+
                 intent.putExtra(ImageActivity.KEY_URL, imageUrl);
+
+                image.buildDrawingCache();
+                Bitmap imageBitmap = image.getDrawingCache();
+                imageBitmap = UploadImageEvent.getResizedBitmap(imageBitmap,100);
+                Bundle extras = new Bundle();
+                extras.putParcelable(ImageActivity.KEY_THUMBS_IMAGE, imageBitmap);
+                intent.putExtras(extras);
+
                 startActivity(intent);
             }
         });
@@ -112,13 +124,14 @@ public class EventActivity extends AppCompatActivity implements EventCallback {
     @Override
     public void loadEvent(Event event) {
 
-        imageUrl = event.getImageThumbnail();
-        Picasso.with(this).invalidate(imageUrl);
-        Picasso.with(this).load(imageUrl).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE);
+        imageUrlThums = event.getImageThumbnail();
+        Picasso.with(this).invalidate(imageUrlThums);
+        Picasso.with(this).load(imageUrlThums).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE);
         Picasso.with(this)
-                .load(imageUrl)
+                .load(imageUrlThums)
                 .into(image);
 
+        imageUrl = event.getImage();
         String name = event.getName();
         this.name.setText(name);
         if (name.length() > 14)

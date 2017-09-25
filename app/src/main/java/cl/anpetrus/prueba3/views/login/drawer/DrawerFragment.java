@@ -49,7 +49,6 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
     private MagicalPermissions magicalPermissions;
     private MagicalCamera magicalCamera;
     private CircularImageView avatar;
-
     private int PHOTO_SIZE = 30;
     private TextView takeAvatarTv;
 
@@ -145,13 +144,12 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
         super.onActivityResult(requestCode, resultCode, data);
 
         magicalCamera.resultPhoto(requestCode, resultCode, data);
-
         if (RESULT_OK == resultCode) {
             Toast.makeText(getContext(), "Cargando foto", Toast.LENGTH_SHORT).show();
             takeAvatarTv.setText("Cargando...");
             takeAvatarTv.setClickable(false);
-            Bitmap photo = magicalCamera.getPhoto();
 
+            Bitmap photo = magicalCamera.getPhoto();
             photo = UploadImageEvent.getResizedBitmap(photo, 250);
 
             new UploadAvatarUser(this).uploadPhotoAvatar(photo);
@@ -159,10 +157,9 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
     }
 
     private void requestSelfie() {
-
         new AlertDialog.Builder(getActivity())
                 .setTitle("Selfie :)")
-                .setMessage("para completar el registro debes tener una selfie actualizada")
+                .setMessage("Para completar el registro debes tener una selfie actualizada")
                 .setCancelable(true)
                 .setPositiveButton("SELFIE", new DialogInterface.OnClickListener() {
                     @Override
@@ -188,7 +185,7 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
     public void photoUpload(String url) {
         setPhoto(url);
         Toast.makeText(getContext(), "Avatar actualizado", Toast.LENGTH_SHORT).show();
-        takeAvatarTv.setText("Cambiar foto");
+        takeAvatarTv.setText("Cambiar");
         takeAvatarTv.setClickable(true);
     }
 
@@ -199,6 +196,7 @@ public class DrawerFragment extends Fragment implements PhotoUserCallback {
                 .load(url)
                 .centerCrop()
                 .fit()
+                .placeholder(R.mipmap.ic_launcher_round)
                 .into(avatar);
     }
 }

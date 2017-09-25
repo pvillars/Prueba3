@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,6 +14,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
@@ -66,14 +68,11 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     boolean imageZoom;
     private LinearLayout addEventLl;
     private AppBarLayout appBar;
-    private String pathPhoto;
-    private String pathPhotoThumbails;
     private FloatingActionButton galleryFab;
     private FloatingActionButton photoFab;
     private MagicalPermissions magicalPermissions;
     private MagicalCamera magicalCamera;
     private int PHOTO_SIZE = 80;
-    private String imageUri;
 
     private Event eventMaster;
     private String actionExtra;
@@ -146,13 +145,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                     eventMaster.setDescription(descriptionTv.getText().toString());
                     eventMaster.setStart(new MyDate(startDateTime).toString());
                     eventMaster.setUidUser(userUidEmail);
-
-                    pathPhoto = imageUri;
-
-                    //photo = imageIv.getDrawingCache();
-
                     actionValidator.saveOrUpdate(eventMaster, photo, actionExtra, withNewPhoto);
-
 
                 } catch (ParseException e) {
                     Log.e("PARSEEXCPTION", "Error en parsear FechaStart" + e);
@@ -161,8 +154,8 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             }
         });
         getSupportActionBar().setTitle("");
-        if (actionExtra.equals(ID_ACTION_NEW)) {
 
+        if (actionExtra.equals(ID_ACTION_NEW)) {
             saveUpdateBtn.setText("AGREGAR");
             dateString = new SimpleDateFormat("dd-MM-yyyy").format(date);
             timeString = new SimpleDateFormat("HH:mm:ss").format(date);
@@ -187,15 +180,11 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
                     dateStartEt.setText(dateString);
                     timeStartEt.setText(timeString);
                     setPhoto(event.getImage());
-                    Toast.makeText(ActionEventActivity.this, event.getImage(), Toast.LENGTH_LONG).show();
-                    Log.d("IOP", event.getImage());
                     loadingDismiss();
-                    // progressBar.setVisibility(View.INVISIBLE);
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    //  progressBar.setVisibility(View.INVISIBLE);
                 }
             });
         } else {
@@ -204,6 +193,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
 
 
         photoFab = (FloatingActionButton) findViewById(R.id.photoFab);
+        photoFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorAccentSecundary)));
         photoFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -214,6 +204,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         });
 
         galleryFab = (FloatingActionButton) findViewById(R.id.galleryFab);
+        galleryFab.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(this, R.color.colorAccentSecundary)));
         galleryFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -241,9 +232,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
             @Override
             public void onClick(View view) {
                 hideKeyBoard(view);
-
                 int year, month, day;
-                // Get Current Date
                 final Calendar c = Calendar.getInstance();
                 year = c.get(Calendar.YEAR);
                 month = c.get(Calendar.MONTH);
@@ -343,37 +332,29 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         super.onActivityResult(requestCode, resultCode, data);
 
         try {
-            //CALL THIS METHOD EVER
             magicalCamera.resultPhoto(requestCode, resultCode, data);
-
             if (RESULT_OK == resultCode) {
-                Toast.makeText(this, "OKA", Toast.LENGTH_SHORT).show();
                 photo = magicalCamera.getPhoto();
-
                 photo = UploadImageEvent.getResizedBitmap(photo, 800);
-
                 imageIv.setImageBitmap(photo);
-
                 withNewPhoto = true;
-
                 setVisivilityRotateBtns(View.VISIBLE);
-
             } else {
-                Toast.makeText(this, "Favor intenta nuevamente", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Favor intenta con otra opción", Toast.LENGTH_SHORT).show();
             }
         } catch (Exception e) {
             Log.d("Exception", e.toString());
-            Toast.makeText(this, "Error inesperado, favor intente nuevamente", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Error inesperado, favor intenta con otra opción", Toast.LENGTH_LONG).show();
         }
     }
 
-    private void savePhotosOnDevice() {
+    /*private void savePhotosOnDevice() {
         Bitmap photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
         pathPhoto = magicalCamera.savePhotoInMemoryDevice(photo, "Imagen", "Eventos", MagicalCamera.JPEG, true);
         pathPhoto = "file://" + pathPhoto;
         pathPhotoThumbails = magicalCamera.savePhotoInMemoryDevice(photoThumbs, "Imagen", "EventosThumbs", MagicalCamera.JPEG, true);
         pathPhotoThumbails = "file://" + pathPhotoThumbails;
-    }
+    }*/
 
 
     private void requestPhoto() {
@@ -383,7 +364,7 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
     private void setPhoto(String url) {
         /*DisplayMetrics metrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        int width = metrics.widthPixels; // ancho absoluto en pixels
+        int width = metrics.widthPixels;
         int height = metrics.heightPixels;*/
         Picasso.with(this).invalidate(url);
         Picasso.with(this).load(url).networkPolicy(NetworkPolicy.NO_CACHE).memoryPolicy(MemoryPolicy.NO_CACHE);
@@ -396,9 +377,6 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         params.height = LinearLayout.LayoutParams.MATCH_PARENT;
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
         imageIv.setLayoutParams(params);
-        imageUri = url;
-
-
     }
 
     private void imageZoom(View view) {
@@ -412,13 +390,10 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         }
     }
 
-
     private void imageZoomIn() {
-
         if (photo != null) {
             setVisivilityRotateBtns(View.VISIBLE);
         }
-
         ViewGroup.LayoutParams params = appBar.getLayoutParams();
         params.height = LinearLayout.LayoutParams.MATCH_PARENT;
         params.width = LinearLayout.LayoutParams.MATCH_PARENT;
@@ -475,30 +450,21 @@ public class ActionEventActivity extends AppCompatActivity implements ActionEven
         } else {
             new UploadImageEvent(ActionEventActivity.this).uploadUpdate(null, null, eventMaster, withNewPhoto);
         }
-
     }
 
     @Override
     public void saveEvent() {
-
         Bitmap photoThumbs = UploadImageEvent.getResizedBitmap(photo, 380);
-
         new UploadImageEvent(ActionEventActivity.this).uploadSave(photo, photoThumbs, eventMaster);
-
         Toast.makeText(this, "Agregando Evento", Toast.LENGTH_SHORT).show();
-
     }
 
     @Override
     public void loadFinished() {
+        Toast.makeText(this, "Evento Cargado", Toast.LENGTH_SHORT).show();
         finish();
     }
 
-    @Override
-    public void finish() {
-        super.finish();
-        Toast.makeText(this, "Evento Agregado", Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void errorMessage(String message) {

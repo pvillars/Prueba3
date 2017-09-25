@@ -22,20 +22,19 @@ public class LoginActivity extends AppCompatActivity implements LoginCallBack {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_login);
         new LoginValidator(this).init();
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (RC_SIGN_IN == requestCode) {
             if (ResultCodes.OK == resultCode) {
                 new UserService().saveCurrentUser();
                 success();
+            } else {
+                finish();
             }
         }
     }
@@ -57,8 +56,8 @@ public class LoginActivity extends AppCompatActivity implements LoginCallBack {
                                         new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build(),
                                         new AuthUI.IdpConfig.Builder(AuthUI.FACEBOOK_PROVIDER).build()/*,
                                         new AuthUI.IdpConfig.Builder(AuthUI.TWITTER_PROVIDER).build()*/))
-                        // .setTheme(R.style.LoginTheme)
-                        // .setLogo(R.mipmap.logo)
+                        .setTheme(R.style.LoginTheme)
+                         //.setLogo(R.mipmap.logo)
                         .build(),
                 RC_SIGN_IN);
     }

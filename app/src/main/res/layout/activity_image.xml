@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="cl.anpetrus.prueba3.views.main.ImageActivity">
+    tools:context="cl.anpetrus.prueba3.views.events.ImageActivity">
 
     <include
         android:id="@+id/include2"

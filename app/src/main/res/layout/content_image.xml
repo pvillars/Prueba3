@@ -7,7 +7,7 @@
     android:background="@android:color/black"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context="cl.anpetrus.prueba3.views.main.ImageActivity">
+    tools:context="cl.anpetrus.prueba3.views.events.ImageActivity">
 
     <ImageView
         android:id="@+id/imageBtn"

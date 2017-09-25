@@ -40,7 +40,8 @@
         android:layout_alignParentEnd="true"
         android:clickable="true"
         android:paddingRight="8dp"
-        android:text="Cambiar Foto" />
+        android:text="Cambiar Foto"
+        android:textColor="@android:color/white"/>
 
     <View
         android:id="@+id/viewLine"
@@ -60,6 +61,7 @@
         android:drawableLeft="@mipmap/ic_add_white_24dp"
         android:text="  Proximos Eventos"
         android:textSize="16sp"
+        android:textColor="@android:color/white"
         android:textStyle="bold" />
 
     <TextView
@@ -72,7 +74,8 @@
         android:drawableLeft="@mipmap/ic_add_white_24dp"
         android:text="  Mis Eventos"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/logoutTv"
